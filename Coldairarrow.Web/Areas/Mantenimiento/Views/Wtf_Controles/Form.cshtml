@@ -1,0 +1,86 @@
+@using Coldairarrow.Entity.Mantenimiento;
+@using Coldairarrow.Util;
+
+@{
+    Layout = "~/Views/Shared/_Layout_Form.cshtml";
+
+    var obj = (Wtf_Controles)Model;
+    var objStr = Html.Raw(obj.ToJson());
+}
+<div style="padding:15px;padding-right:45px;">
+    <form id="form" class="form-horizontal" role="form">
+
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-5">
+                <input name="Nombre" value="@obj.Nombre" type="text" class="form-control" required>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Periodicidad</label>
+            <div class="col-sm-5">
+                <input name="Periodicidad" id="Periodicidad" value="@obj.Periodicidad" type="number" min="2" max="60" class="form-control" required>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Preaviso</label>
+            <div class="col-sm-5">
+                <input name="Preaviso" id="Preaviso" value="@obj.Preaviso" type="number" min="1" class="form-control" required>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button id="submit" type="submit" class="hidden">提交</button>
+        </div>
+    </form>
+</div>
+<script>
+    var theEntity = @objStr;
+
+    $(function () {
+        initEvent();
+    });
+
+    //事件绑定
+    function initEvent() {
+        //表单校验
+        $('#form').validator().on('submit', function (e) {
+            //校验成功
+            if (!e.isDefaultPrevented()) {
+                e.preventDefault();
+
+                var Periodicidad = parseInt($('#Periodicidad').val());
+                var Preaviso = parseInt($('#Preaviso').val());
+
+                if (Periodicidad - Preaviso < 1) {
+                    dialogError("La periodicidad debe ser mayor que el tiempo de preaviso");
+                    return;
+                }
+
+                var values = $('#form').getValues();
+                
+                $.extend(theEntity, values);
+                loading();
+                $.postJSON('/Mantenimiento/Wtf_Controles/SaveData', theEntity, function (resJson) {
+                    loading(false);
+
+                    if (resJson.Success) {
+                        parent.$('#dataTable').bootstrapTable('refresh');
+                        parent.dialogSuccess();
+                        dialogClose();
+                    }
+                    else {
+                        dialogError(resJson.Msg);
+                    }
+                });
+            }
+        })
+    }
+
+    //提交表单
+    function submitForm() {
+        $('#submit').trigger('click');
+    }
+</script>

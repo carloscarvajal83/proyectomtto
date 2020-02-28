@@ -1,0 +1,189 @@
+﻿@using Coldairarrow.Business.Base_SysManage;
+
+@{
+    Layout = "~/Views/Shared/_Layout_List.cshtml";
+    var manageSysPermission = PermissionManage.OperatorHasPermissionValue("sysuser.manageSysPermission");
+    var userManage = PermissionManage.OperatorHasPermissionValue("sysuser.manage");
+}
+
+<div class="fx-content">
+    <div id="toobar">
+        <div class="btn-group btn-group-sm">
+            <button onclick="openForm('', 'AGREGAR USUARIO');" type="button" class="btn btn-default" aria-label="Left Align">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                NEW
+            </button>
+            <button onclick="deleteData();" type="button" class="btn btn-default" aria-label="Right Align">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                DELETE
+            </button>
+            <button type="button" class="btn btn-default" aria-label="Right Align" onclick="javascript: location.reload();">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                REFRESH
+            </button>
+        </div>
+    </div>
+    <div class="fx-wrapper">
+        <form class="form-inline" id="searchForm">
+            <div class="form-group">
+                <label>Consulta</label>
+                <select class="selectpicker" name="condition" data-style="btn-default btn-sm" data-width="100px">
+                    <option value="">Seleccione</option>
+                    <option value="UserName">Usuario</option>
+                    <option value="RealName">Nombre</option>
+                </select>
+                <input type="text" class="form-control input-sm" name="keyword" placeholder="Ingrese Texto">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default btn-sm" onclick="javascript: $('#dataTable').bootstrapTable('refresh', { silent: true });">
+                    <i class="glyphicon glyphicon-search"></i>
+                    BUSCAR
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="fx-wrapper">
+        <table id="dataTable" class="table-bordered"></table>
+    </div>
+</div>
+
+<script>
+    var $table = $('#dataTable');
+    var manageSysPermission =@manageSysPermission.ToString().ToLower();
+    var userManage =@userManage.ToString().ToLower();
+
+    $(function () {
+        initTable();
+        bindEvent();
+    });
+
+    //初始化表格
+    function initTable() {
+        $table.bootstrapTable({
+            url: '/Base_SysManage/Base_User/GetDataList',
+            idField: 'id',
+            pagination: true,
+            method: 'post',
+            clickToSelect: false,
+            sidePagination: "server",
+            contentType: 'application/x-www-form-urlencoded',
+            queryParamsType: '',
+            pageNumber: 1,
+            pageSize: 30,
+            pageList: [10, 30, 60, 100],
+            columns: [
+                { title: 'ck', field: 'ck', checkbox: true },
+                { title: 'USUARIO', field: 'UserName', width: 200 },
+                { title: 'NOMBRE', field: 'RealName', width: 200 },
+                {
+                    title: 'GENERO', field: 'Sex', width: 200, formatter: function (value, row) {
+                        var mapping = {
+                            '1': 'HOMBRE',
+                            '0': 'MUJER'
+                        };
+
+                        return mapping[value];
+                    }
+                },
+                {
+                    title: 'F. NACIMIENTO', field: 'Birthday', width: 200, formatter: function (value) {
+                        return toDateString(value, 'yyyy-MM-dd');
+                    }
+                },
+                { title: 'ROL', field: 'RoleNameList', width: 600 },
+                {
+                    title: 'ACCIONES', field: '_', width: '20%', formatter: function (value, row) {
+                        var builder = new BtnBuilder();
+                        if (userManage) {
+                            builder.AddBtn({ icon: 'glyphicon-edit', function: 'openForm', param: [row['Id']] });
+                            builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']] });
+                        }
+                        if (manageSysPermission) {
+                            builder.AddBtn({ name: 'AUTORIZAR', icon: 'glyphicon-edit', function: 'setPermission', param: [row['UserId'], row['RealName']] });
+                        }
+
+                        return builder.build();
+                    }
+                }
+            ],
+            queryParams: function (params) {
+                var searchParams = $('#searchForm').getValues();
+                $.extend(params, searchParams);
+
+                return params;
+            },
+            onLoadSuccess: function () {
+                if (!userManage) {
+                    $('#dataTable').bootstrapTable('hideColumn', '_');
+                }
+            }
+        });
+    }
+
+    //绑定事件
+    function bindEvent() {
+
+    }
+
+    //打开表单
+    function openForm(id, title) {
+        dialogOpen({
+            id: 'form',
+            title: title,
+            btn: ['Ok', 'Cancel'],
+            url: '/Base_SysManage/Base_User/Form?id={0}'.format(id || ''),
+            yes: function (window, body) {
+                window.submitForm();
+            }
+        });
+    }
+
+    //删除数据
+    function deleteData(id) {
+        dialogComfirm('Desea Eliminar？', function () {
+            var ids = [];
+
+            if (typeof (id) == 'string') {//单条数据
+                ids.push(id);
+            } else {//多条数据
+                var rows = $table.bootstrapTable('getSelections');
+                if (rows.length == 0) {
+                    dialogError('Por favor, seleccione los datos que desea eliminar！');
+                    return;
+                } else {
+                    $.each(rows, function (index, value) {
+                        ids.push(value['Id']);
+                    })
+                }
+            }
+
+            loading();
+            $.postJSON('/Base_SysManage/Base_User/DeleteData', { ids: JSON.stringify(ids) }, function (resJson) {
+                loading(false);
+
+                if (resJson.Success) {
+                    $table.bootstrapTable('refresh');
+                    dialogSuccess('Eliminado Exitosamente!');
+                }
+                else {
+                    dialogError(resJson.Msg);
+                }
+            });
+        });
+    }
+
+    //设置权限
+    function setPermission(userId, realName) {
+        dialogOpen({
+            id: 'permissionForm',
+            title: 'Permisos para {0}'.format(realName),
+            width: '80.5%',
+            height: '80.5%',
+            btn: ['Asignar', 'Cancelar'],
+            url: '/Base_SysManage/Base_User/PermissionForm?userId={0}'.format(userId),
+            yes: function (iframeWin) {
+                iframeWin.savePermission();
+            }
+        });
+    }
+</script>
