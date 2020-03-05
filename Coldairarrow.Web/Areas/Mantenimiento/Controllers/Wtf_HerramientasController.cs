@@ -12,6 +12,7 @@ using System.Xml;
 using System.Drawing;
 using OfficeOpenXml.Style;
 using Microsoft.AspNetCore.Hosting;
+using System.Text.RegularExpressions;
 
 namespace Coldairarrow.Web
 {
@@ -107,17 +108,24 @@ namespace Coldairarrow.Web
                 PageRows = int.MaxValue
             };
             var listado = _wtf_vReporteControlesHerramientaBusiness.GetDataList(Id, pagination);
-            string Serial = "NA";
+            string serialHerramienta = "-";
+            string familiaHerramienta = "-";
+            string itemNumberHerramienta = "-";
+            string nombreHerramienta = "-";
             if (listado.Count > 0)
             {
-                Serial = listado[0].Serial;
+                serialHerramienta = listado[0].Serial;
+                familiaHerramienta = listado[0].Familia.ToUpper();
+                itemNumberHerramienta = listado[0].ItemNumber;
+                nombreHerramienta = listado[0].Herramienta.ToUpper();
             }
             
             var FechaHoy = DateTime.Now;
             string strYear = FechaHoy.ToString("yyyy");
             string strMes = FechaHoy.ToString("MM");
             string strDia = FechaHoy.ToString("dd");
-            string NombreArchivo = "ReporteHerramienta_" + Serial + "_" + strYear + strMes + strDia + ".xlsx";
+            serialHerramienta = Regex.Replace(serialHerramienta, @"\t|\n|\r", "");
+            string NombreArchivo = "ReporteHerramienta_" + serialHerramienta + "_" + strYear + strMes + strDia + ".xlsx";
             string Directorio = "ExportFiles/";
             var serverPath = Path.Combine(_env.WebRootPath, Directorio);
             DirectoryInfo outputDir = new DirectoryInfo(serverPath);
@@ -131,75 +139,80 @@ namespace Coldairarrow.Web
             using (var package = new ExcelPackage(newfile))
             {
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Reporte");
-                worksheet.Row(1).Height = 25;
-                worksheet.Cells[1, 1].Value = "REPORTE ESTADO HERRAMIENTA";
-                worksheet.Cells[1, 1, 2, 7].Style.Font.Bold = true;
-                worksheet.Cells[1, 1, 2, 7].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet.Cells[1, 1, 2, 7].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                worksheet.Cells[1, 1, 1, 7].Merge = true;
-                worksheet.Cells["A1:G1"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Column(1).Width = 30.78;
-                worksheet.Column(2).Width = 15.78;
-                worksheet.Column(3).Width = 10.78;
-                worksheet.Column(4).Width = 30.78;
-                worksheet.Column(5).Width = 50.78;
-                worksheet.Column(6).Width = 12.78;
-                worksheet.Column(7).Width = 12.78;
-                worksheet.Cells["A2:G2"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells["A2:G2"].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
-                worksheet.Cells["A2"].Value = "HERRAMIENTA";
-                worksheet.Cells["B2"].Value = "SERIAL";
-                worksheet.Cells["C2"].Value = "ITEM NO";
-                worksheet.Cells["D2"].Value = "FAMILIA";
-                worksheet.Cells["E2"].Value = "CONTROL";
-                worksheet.Cells["F2"].Value = "FECHA INSP.";
-                worksheet.Cells["G2"].Value = "VENCIMIENTO";
-                worksheet.Cells["A2"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Cells["B2"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Cells["C2"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Cells["D2"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Cells["E2"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Cells["F2"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                worksheet.Cells["G2"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                int ifila = 2;
-                int ffila = 2;
+                worksheet.Column(1).Width = 70.78;
+                worksheet.Column(2).Width = 12.78;
+                worksheet.Column(3).Width = 12.78;
+                worksheet.Column(4).Width = 16.78;
+                worksheet.Cells[1, 1].Value = "FAMILIA";
+                worksheet.Cells[2, 1].Value = familiaHerramienta;
+                worksheet.Cells[3, 1].Value = "HERRAMIENTA";
+                worksheet.Cells[4, 1].Value = nombreHerramienta;
+                worksheet.Cells[5, 1].Value = "SERIAL";
+                worksheet.Cells[6, 1].Value = serialHerramienta;
+                worksheet.Cells[7, 1].Value = "ITEM NUMBER";
+                worksheet.Cells[8, 1].Value = itemNumberHerramienta;
+                worksheet.Cells[1, 1, 9, 4].Style.Font.Bold = true;
+                worksheet.Cells[1, 1, 9, 4].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[1, 1, 9, 4].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                for (int i = 1; i < 9; i++)
+                {
+                    worksheet.Cells[i, 1, i, 4].Merge = true;
+                    worksheet.Cells[i, 1, i, 4].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    if (i % 2 == 0) continue;
+                    worksheet.Cells[i, 1, i, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[i, 1, i, 4].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+
+                }
+                worksheet.Cells["A9:D9"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["A9:D9"].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+                worksheet.Cells["A9"].Value = "CONTROL";
+                worksheet.Cells["B9"].Value = "FECHA INSP.";
+                worksheet.Cells["C9"].Value = "VENCIMIENTO";
+                worksheet.Cells["D9"].Value = "APLICA CONTROL";
+                worksheet.Cells["A9"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells["B9"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells["C9"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells["D9"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                int ffila = 9;
                 foreach (var item in listado)
                 {
                     ffila++;
-                    worksheet.Cells[ffila, 1].Value = item.Herramienta.ToUpper();
-                    worksheet.Cells[ffila, 2].Value = item.Serial.ToUpper();
-                    worksheet.Cells[ffila, 3].Value = item.ItemNumber.ToUpper();
-                    worksheet.Cells[ffila, 4].Value = item.Familia.ToUpper();
-                    worksheet.Cells[ffila, 5].Value = item.Control?.ToUpper();
-                    worksheet.Cells[ffila, 6].Value = item.FechaInspeccion;
-                    worksheet.Cells[ffila, 6].Style.Numberformat.Format = "dd-mmm-yyyy";
-                    worksheet.Cells[ffila, 7].Value = item.ProximaInspecion;
-                    worksheet.Cells[ffila, 7].Style.Numberformat.Format = "dd-mmm-yyyy";
-                    worksheet.Cells[ffila, 5].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                    worksheet.Cells[ffila, 6].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                    worksheet.Cells[ffila, 7].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                    worksheet.Cells[ffila, 5, ffila, 7].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[ffila, 1].Value = item.Control?.ToUpper();
+                    worksheet.Cells[ffila, 2].Value = item.FechaInspeccion;
+                    worksheet.Cells[ffila, 2].Style.Numberformat.Format = "dd-mmm-yyyy";
+                    worksheet.Cells[ffila, 3].Value = item.ProximaInspecion;
+                    worksheet.Cells[ffila, 4].Value = "SI"; // Proximamente Aplica control;
+                    worksheet.Cells[ffila, 3].Style.Numberformat.Format = "dd-mmm-yyyy";
+                    worksheet.Cells[ffila, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells[ffila, 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells[ffila, 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells[ffila, 4].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                    worksheet.Cells[ffila, 1, ffila, 4].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     switch (item.Estado)
                     {
                         case 1:
-                            worksheet.Cells[ffila, 5, ffila, 7].Style.Fill.BackgroundColor.SetColor(255, 0, 255, 0);
+                            worksheet.Cells[ffila, 1, ffila, 4].Style.Fill.BackgroundColor.SetColor(255, 0, 255, 0);
+                            worksheet.Cells[ffila, 4].Value = "OPERATIVO";
                             break;
                         case 2:
-                            worksheet.Cells[ffila, 5, ffila, 7].Style.Fill.BackgroundColor.SetColor(255, 255, 192, 0);
+                            worksheet.Cells[ffila, 1, ffila, 4].Style.Fill.BackgroundColor.SetColor(255, 255, 192, 0);
+                            worksheet.Cells[ffila, 4].Value = "POR VENCER";
                             break;
                         case 3:
-                            worksheet.Cells[ffila, 5, ffila, 7].Style.Fill.BackgroundColor.SetColor(255, 255, 0, 0);
+                            worksheet.Cells[ffila, 1, ffila, 4].Style.Fill.BackgroundColor.SetColor(255, 255, 0, 0);
+                            worksheet.Cells[ffila, 4].Value = "VENCIDO";
                             break;
                         default:
                             break;
                     }
                 }
+                /*
                 ifila++;
                 for (int i = 1; i <= 4; i++)
                 {
                     worksheet.Cells[ifila, i, ffila, i].Merge = true;
                     worksheet.Cells[ifila, i, ffila, i].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                }
+                }*/
                 package.Save();
             }
             var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";

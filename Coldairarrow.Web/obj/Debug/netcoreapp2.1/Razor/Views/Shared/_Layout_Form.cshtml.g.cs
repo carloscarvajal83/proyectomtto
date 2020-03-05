@@ -43,7 +43,7 @@ namespace AspNetCore
             WriteLiteral("<!DOCTYPE html>\r\n\r\n<html>\r\n");
             EndContext();
             BeginContext(27, 1887, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "990126453f904e08b64fef9bec3319a2", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "3243f964c4f940719c61aeec0d74aab8", async() => {
                 BeginContext(33, 85, true);
                 WriteLiteral("\r\n    <meta charset=\"utf-8\" />\r\n    <title>表单</title>\r\n    <!--jQuery-->\r\n    <script");
                 EndContext();
@@ -223,7 +223,7 @@ WriteAttributeValue("", 1857, Url.Scrpit("~/Scripts/util/util.js"), 1857, 37, fa
             WriteLiteral("\r\n");
             EndContext();
             BeginContext(1916, 133, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "afb3dc0876b945f781c4f07c1d2ff64e", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "00c8fbc57dc84e08b75f88ef51d2699f", async() => {
                 BeginContext(1922, 62, true);
                 WriteLiteral("\r\n    <script type=\"text/javascript\">\r\n        var rootUrl = \'");
                 EndContext();

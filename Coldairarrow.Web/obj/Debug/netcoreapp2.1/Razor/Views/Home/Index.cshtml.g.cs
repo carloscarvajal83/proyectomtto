@@ -77,7 +77,7 @@ using Coldairarrow.Business.Common;
             WriteLiteral("\r\n<!DOCTYPE html>\r\n<html>\r\n");
             EndContext();
             BeginContext(227, 1578, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "9c9fbb67be634688ad58da03b79a7848", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "348b054716014c2f96186a53bbc20008", async() => {
                 BeginContext(233, 348, true);
                 WriteLiteral(@"
     <meta charset=""utf-8"">
@@ -129,7 +129,7 @@ WriteAttributeValue("", 974, Url.Scrpit("~/Scripts/vendor/adminlte/dist/css/Admi
                 WriteLiteral(">\r\n    <!-- AdminLTE Skins. Choose a skin from the css/skins\r\n         folder instead of downloading all of them to reduce the load. -->\r\n    ");
                 EndContext();
                 BeginContext(1183, 89, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("link", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagOnly, "9a7d35b9eab94de3a95a340052cdc7be", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("link", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagOnly, "e6a3f71aff49410687feda0cedc5f3e3", async() => {
                 }
                 );
                 __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -179,7 +179,7 @@ WriteAttributeValue("", 974, Url.Scrpit("~/Scripts/vendor/adminlte/dist/css/Admi
             WriteLiteral("\r\n");
             EndContext();
             BeginContext(1807, 11790, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "b35adc57172340e5b1cf34e7e889512a", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "bb8504979d024552818c95e410e5efa7", async() => {
                 BeginContext(1865, 1471, true);
                 WriteLiteral(@"
     <div class=""wrapper"">
@@ -211,7 +211,7 @@ WriteAttributeValue("", 974, Url.Scrpit("~/Scripts/vendor/adminlte/dist/css/Admi
                                 ");
                 EndContext();
                 BeginContext(3336, 98, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagOnly, "3d25dbf02cc04c9497f6d1da0092a891", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagOnly, "337bd3b4d8594122b9bef8aa5d4f8be7", async() => {
                 }
                 );
                 __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -241,7 +241,7 @@ WriteAttributeValue("", 974, Url.Scrpit("~/Scripts/vendor/adminlte/dist/css/Admi
                 WriteLiteral("</span>\r\n                            </a>\r\n                            <ul class=\"dropdown-menu\">\r\n                                <!-- User image -->\r\n                                <li class=\"user-header\">\r\n                                    ");
                 EndContext();
                 BeginContext(3765, 98, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagOnly, "29048ed64cb34e029cc1f6a7b38eb2e6", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagOnly, "bca33be7462844aab9c6f6fda19db2cb", async() => {
                 }
                 );
                 __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -302,7 +302,7 @@ WriteAttributeValue("", 974, Url.Scrpit("~/Scripts/vendor/adminlte/dist/css/Admi
                         ");
                 EndContext();
                 BeginContext(6305, 98, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagOnly, "f59f35d3dc02439b8ccfe57c0d80a487", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagOnly, "b8c32787c20b4e14a3cac1ce1b921861", async() => {
                 }
                 );
                 __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();

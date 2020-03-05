@@ -45,7 +45,7 @@ namespace AspNetCore
             WriteLiteral("<!DOCTYPE html>\n<html>\n");
             EndContext();
             BeginContext(23, 1289, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "b8566ce25dfc41ae84aa388446a44d9b", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "209524199ebc43ea8eb9204ae475436d", async() => {
                 BeginContext(29, 322, true);
                 WriteLiteral(@"
     <meta charset=""utf-8"">
@@ -130,7 +130,7 @@ WriteAttributeValue("", 861, Url.Scrpit("~/Scripts/vendor/iCheck/square/blue.css
             WriteLiteral("\n");
             EndContext();
             BeginContext(1313, 4876, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e2e4f4a1373347428285308ba8529752", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "ec6e02cdc01b4b6b920260098bfc54f0", async() => {
                 BeginContext(1373, 191, true);
                 WriteLiteral("\n    <div class=\"login-box\">\n        <div class=\"login-logo\">\n            <a href=\"#\"><b>MY ADMIN HQ</b></a>\n        </div>\n        <!-- /.login-logo -->\n        <div class=\"login-box-body\">\n");
                 EndContext();

@@ -44,7 +44,7 @@ namespace AspNetCore
             WriteLiteral("<!DOCTYPE html>\n<html>\n");
             EndContext();
             BeginContext(23, 315, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "1973f3907e7f4ce5b7e8af1e08a22ac0", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8eefb2dc2dd64441a2a2158e8c873c89", async() => {
                 BeginContext(29, 140, true);
                 WriteLiteral("\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <base target=\"_blank\">\n\n    <link");
                 EndContext();
@@ -84,7 +84,7 @@ WriteAttributeValue("", 271, Url.Scrpit("~/Skin/home/style.min.css"), 271, 40, f
             WriteLiteral("\n");
             EndContext();
             BeginContext(339, 5503, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "47b74f686e8041568086f516ce2546d2", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "1c7bcaf863974f0da2c9fd99d21332d4", async() => {
                 BeginContext(361, 5474, true);
                 WriteLiteral(@"
     <div class=""wrapper wrapper-content"">

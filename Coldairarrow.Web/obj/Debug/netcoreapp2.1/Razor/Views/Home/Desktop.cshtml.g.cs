@@ -43,7 +43,7 @@ namespace AspNetCore
             WriteLiteral("<!DOCTYPE html>\n<html>\n\n");
             EndContext();
             BeginContext(24, 223, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "943c5ec702a1476d8a4a8298885de20e", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "3536daad58874b64a27f15e720422cea", async() => {
                 BeginContext(30, 74, true);
                 WriteLiteral("\n    <meta charset=\"UTF-8\">\n    <title></title>\n    <link rel=\"stylesheet\"");
                 EndContext();
@@ -83,7 +83,7 @@ WriteAttributeValue("", 200, Url.Scrpit("~/css/fx/desktop.css"), 200, 35, false)
             WriteLiteral("\n\n");
             EndContext();
             BeginContext(249, 1514, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "8e0c9d024ab9400eb2323998fb8f7e1e", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "7ab5baeee52b45a181ed2006e1fc30aa", async() => {
                 BeginContext(255, 1501, true);
                 WriteLiteral(@"
     <div class=""admin-main"">

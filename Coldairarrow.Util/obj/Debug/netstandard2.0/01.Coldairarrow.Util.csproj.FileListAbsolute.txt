@@ -3,6 +3,7 @@ C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Util\bin\Debug\netstandard
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Util\bin\Debug\netstandard2.0\Coldairarrow.Util.pdb
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Util\bin\Debug\netstandard2.0\Aspose.Cells.dll
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Util\bin\Debug\netstandard2.0\LinqKit.dll
+C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Util\obj\Debug\netstandard2.0\01.Coldairarrow.Util.csprojAssemblyReference.cache
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Util\obj\Debug\netstandard2.0\01.Coldairarrow.Util.AssemblyInfoInputs.cache
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Util\obj\Debug\netstandard2.0\01.Coldairarrow.Util.AssemblyInfo.cs
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Util\obj\Debug\netstandard2.0\01.Coldairarrow.Util.csproj.CopyComplete

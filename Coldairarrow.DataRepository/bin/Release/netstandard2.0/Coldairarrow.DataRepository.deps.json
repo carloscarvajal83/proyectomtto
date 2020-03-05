@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETStandard,Version=v2.0/",
-    "signature": "a0d2414edcfcae734376b44a1925471be790ac34"
+    "signature": ""
   },
   "compilationOptions": {},
   "targets": {
@@ -2129,15 +2129,13 @@
           "System.Data.SqlClient": "4.5.1",
           "System.Drawing.Common": "4.5.0",
           "System.Linq.Dynamic.Core": "1.0.8.2",
-          "System.Text.Encoding.CodePages": "4.5.0",
-          "Aspose.Cells": "18.4.0.0",
-          "LinqKit": "1.0.0.0"
+          "System.Text.Encoding.CodePages": "4.5.0"
         },
         "runtime": {
           "Coldairarrow.Util.dll": {}
         }
       },
-      "Aspose.Cells.Reference/18.4.0.0": {
+      "Aspose.Cells/18.4.0.0": {
         "runtime": {
           "Aspose.Cells.dll": {
             "assemblyVersion": "18.4.0.0",
@@ -2145,7 +2143,7 @@
           }
         }
       },
-      "LinqKit.Reference/1.0.0.0": {
+      "LinqKit/1.0.0.0": {
         "runtime": {
           "LinqKit.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -3440,12 +3438,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Aspose.Cells.Reference/18.4.0.0": {
+    "Aspose.Cells/18.4.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "LinqKit.Reference/1.0.0.0": {
+    "LinqKit/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

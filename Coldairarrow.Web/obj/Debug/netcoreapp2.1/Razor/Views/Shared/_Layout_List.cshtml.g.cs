@@ -43,7 +43,7 @@ namespace AspNetCore
             WriteLiteral("<!DOCTYPE html>\r\n\r\n<html>\r\n");
             EndContext();
             BeginContext(27, 2029, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "027c7a0ce288420c86f6da2ad412a54d", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "c3e7992ae5154448906b991259c8f801", async() => {
                 BeginContext(33, 88, true);
                 WriteLiteral("\r\n    <meta charset=\"utf-8\" />\r\n    <title>LISTA</title>\r\n    <!--jQuery-->\r\n    <script");
                 EndContext();
@@ -243,7 +243,7 @@ WriteAttributeValue("", 1994, Url.Scrpit("~/css/estilos.css"), 1994, 32, false);
             WriteLiteral("\r\n");
             EndContext();
             BeginContext(2058, 133, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "f726533915f34e4895e680ce987ef8d1", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "7d9013a5fdf64572a6efc8845f38c552", async() => {
                 BeginContext(2064, 62, true);
                 WriteLiteral("\r\n    <script type=\"text/javascript\">\r\n        var rootUrl = \'");
                 EndContext();

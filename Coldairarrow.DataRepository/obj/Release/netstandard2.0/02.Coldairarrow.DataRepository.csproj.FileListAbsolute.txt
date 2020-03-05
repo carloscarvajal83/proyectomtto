@@ -6,7 +6,6 @@ C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.DataRepository\bin\Release
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.DataRepository\bin\Release\netstandard2.0\LinqKit.dll
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.DataRepository\bin\Release\netstandard2.0\Coldairarrow.Util.pdb
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.DataRepository\obj\Release\netstandard2.0\02.Coldairarrow.DataRepository.csprojAssemblyReference.cache
-C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.DataRepository\obj\Release\netstandard2.0\02.Coldairarrow.DataRepository.csproj.CoreCompileInputs.cache
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.DataRepository\obj\Release\netstandard2.0\02.Coldairarrow.DataRepository.AssemblyInfoInputs.cache
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.DataRepository\obj\Release\netstandard2.0\02.Coldairarrow.DataRepository.AssemblyInfo.cs
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.DataRepository\obj\Release\netstandard2.0\02.Coldairarrow.DataRepository.csproj.CopyComplete

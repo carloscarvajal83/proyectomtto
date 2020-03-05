@@ -6,7 +6,6 @@ C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Entity\bin\Release\netstan
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Entity\bin\Release\netstandard2.0\LinqKit.dll
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Entity\bin\Release\netstandard2.0\Coldairarrow.Util.pdb
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Entity\obj\Release\netstandard2.0\03.Coldairarrow.Entity.csprojAssemblyReference.cache
-C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Entity\obj\Release\netstandard2.0\03.Coldairarrow.Entity.csproj.CoreCompileInputs.cache
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Entity\obj\Release\netstandard2.0\03.Coldairarrow.Entity.AssemblyInfoInputs.cache
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Entity\obj\Release\netstandard2.0\03.Coldairarrow.Entity.AssemblyInfo.cs
 C:\Users\ADMIN\source\repos\Coldairarrow\Coldairarrow.Entity\obj\Release\netstandard2.0\03.Coldairarrow.Entity.csproj.CopyComplete
