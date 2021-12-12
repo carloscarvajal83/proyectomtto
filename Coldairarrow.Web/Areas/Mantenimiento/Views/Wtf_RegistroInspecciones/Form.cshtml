@@ -1,0 +1,164 @@
+@using Coldairarrow.Entity.Mantenimiento;
+@using Coldairarrow.Util;
+
+@{
+    Layout = "~/Views/Shared/_Layout_Form.cshtml";
+
+    var obj = (Wtf_RegistroInspecciones)Model;
+    var objStr = Html.Raw(obj.ToJson());
+    var idTool = obj.IdHerramienta;
+    string Herramienta = obj.Herramienta;
+}
+<div style="padding:15px;padding-right:45px;">
+    <form id="form" class="form-horizontal" role="form">
+
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Tool</label>
+            <div class="col-sm-5">
+                <input name="Herramienta" value="@Herramienta" type="text" class="form-control" disabled>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Control</label>
+            <div class="col-sm-5">
+                <select id="controlList" class="selectpicker form-control" name="controlList" data-style="btn-default btn-sm" required title="Select one"></select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm" id="container" style="position:relative">
+            <label class="col-sm-2 control-label">Inspection Date</label>
+            <div class="col-sm-5" style="position:relative">
+                <input id="FechaInspeccion" name="FechaInspeccion" type="text" value="@(obj.FechaInspeccion?.ToString("yyyy-MM-dd"))" data-date-format="yyyy-mm-dd" class="form-control" required autocomplete="off">
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <!--
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">CodigoWO</label>
+            <div class="col-sm-5">
+                <input name="CodigoWO" id="CodigoWO" value="@obj.CodigoWO" type="text" class="form-control" hidden>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        -->
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Inspections</label>
+            <div class="col-sm-5">
+                <table id="inspecTable" class="table-bordered"></table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button id="submit" type="submit" class="hidden">Enviar</button>
+        </div>
+    </form>
+</div>
+<script>
+    var theEntity = @objStr;
+    var typeId = @obj.IdTipoHerramienta;
+    var $inspectable = $('#inspecTable')
+    var idTool = @obj.IdHerramienta;
+
+    $(function () {
+        initEvent();
+    });
+
+    //事件绑定
+    function initEvent() {
+        $('#FechaInspeccion').datetimepicker({
+            language: 'es',
+            minView: 2//日期选择
+        });
+        $('#controlList').selectpicker({
+            url: '/Mantenimiento/Wtf_Controles/GetDataList_ByType?IdTipoHerramienta={0}'.format(typeId),
+            valueField: 'Id',
+            textField: 'Nombre',
+            pleaseSelect: false
+        });
+        $inspectable.bootstrapTable({
+            url: '/Mantenimiento/Wtf_RegistroInspecciones/GetDataList_NoPagin',
+            idField: 'Id',
+            pagination: false,
+            method: 'post',
+            clickToSelect: true,
+            height: 220,
+            contentType: 'application/x-www-form-urlencoded',
+            columns: [
+                { title: 'Control', field: 'Control', width: '55%' },
+                {title: 'Insp. Date', field: 'FechaInspeccion', width: '20%', formatter: function (value) {
+                        return toDateString(value, 'yyyy-MM-dd');
+                    }
+                },
+                {
+                    title: 'Action', field: '_', width: '15%', formatter: function (value, row) {
+                        var builder = new BtnBuilder();
+                        builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']] });
+                        return builder.build();
+                    }
+                }
+            ],
+            queryParams: function (params) {
+                var searchParams = { IdHerramienta: idTool };
+                $.extend(params, searchParams);
+
+                return params;
+            },
+        });
+        //表单校验
+        $('#form').validator().on('submit', function (e) {
+            //校验成功
+            if (!e.isDefaultPrevented()) {
+                e.preventDefault();
+
+                var values = $('#form').getValues();
+
+                $.extend(theEntity, values);
+                theEntity['IdControl'] = $('#controlList').val();
+                theEntity['CodigoWO'] = 0;
+                loading();
+                $.postJSON('/Mantenimiento/Wtf_RegistroInspecciones/SaveData', theEntity, function (resJson) {
+                    loading(false);
+
+                    if (resJson.Success) {
+                        //parent.$('#dataTable').bootstrapTable('refresh');
+                        $('#inspecTable').bootstrapTable('refresh');
+                        parent.dialogSuccess();
+                        //dialogClose();
+                        //$('#FechaInspeccion').val("");
+                        $("#controlList").val('default');
+                        $("#controlList").selectpicker("refresh");
+                        //$("#CodigoWO").val('');
+
+                    }
+                    else {
+                        dialogError(resJson.Msg);
+                    }
+                });
+            } else {
+            }
+        })
+    }
+
+    function deleteData(id) {
+        dialogComfirm('Are you sure?', function () {
+            loading();
+            $.postJSON('/Mantenimiento/Wtf_RegistroInspecciones/DeleteData', { id: id }, function (resJson) {
+                loading(false);
+
+                if (resJson.Success) {
+                    $('#inspecTable').bootstrapTable('refresh');
+                    dialogSuccess('Successfully deleted');
+                }
+                else {
+                    dialogError(resJson.Msg);
+                }
+            });
+        });
+    }
+
+    //提交表单
+    function submitForm() {
+        $('#submit').trigger('click');
+    }
+</script>

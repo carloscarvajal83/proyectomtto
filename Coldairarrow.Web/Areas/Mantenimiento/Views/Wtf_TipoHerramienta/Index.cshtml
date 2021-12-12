@@ -1,0 +1,159 @@
+@using Coldairarrow.Util;
+@{
+    Layout = "~/Views/Shared/_Layout_List.cshtml";
+}
+<div class="fx-content">
+    <div id="toobar">
+        <div class="btn-group btn-group-sm">
+            <button onclick="openForm('', 'NEW GROUP');" type="button" class="btn btn-default" aria-label="Left Align">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                NEW
+            </button>
+            <button onclick="deleteData();" type="button" class="btn btn-default" aria-label="Right Align">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                DELETE
+            </button>
+            <button type="button" class="btn btn-default" aria-label="Right Align" onclick="javascript: location.reload();">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                REFRESH
+            </button>
+        </div>
+    </div>
+    <div class="fx-wrapper">
+        <form class="form-inline" id="searchForm">
+            <div class="form-group">
+                <label>Search</label>
+                <select class="selectpicker" name="condition" data-style="btn-default btn-sm" data-width="100px">
+                    <option value="">Select..</option>
+
+                    <option value="ItemNumber">Item number</option>
+                    <option value="Descripcion">Description</option>
+                </select>
+                <input type="text" class="form-control input-sm" name="keyword" placeholder="Input Text">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default btn-sm" onclick="javascript: $('#dataTable').bootstrapTable('refresh', { silent: true });">
+                    <i class="glyphicon glyphicon-search"></i>
+                    SEARCH
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="fx-wrapper">
+        <table id="dataTable" class="table-bordered"></table>
+    </div>
+</div>
+<script>
+    var $table = $('#dataTable');
+    var raiz = '@GlobalSwitch.WebRootUrl';
+
+    $(function () {
+        initTable();
+        bindEvent();
+        raiz = raiz + "/";
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    //初始化表格
+    function initTable() {
+        $table.bootstrapTable({
+            url: '/Mantenimiento/Wtf_TipoHerramienta/GetDataList',
+            idField: 'Id',
+            pagination: true,
+            method: 'post',
+            clickToSelect: false,
+            sidePagination: "server",
+            contentType: 'application/x-www-form-urlencoded',
+            queryParamsType: '',
+            pageNumber: 1,
+            pageSize: 30,
+            pageList: [10, 30, 60, 100],
+            columns: [
+                { title: 'ck', field: 'ck', checkbox: true, width: '3%' },
+                { title: 'Item Number', field: 'ItemNumber', width: '10%' },
+                { title: 'Description', field: 'Descripcion', width: '50%' },
+                {
+                    title: 'ACTIONS', field: '_', width: '30%', formatter: function (value, row) {
+                        var builder = new BtnBuilder();
+                        builder.AddBtn({ icon: 'glyphicon-edit', function: 'openForm', param: [row['Id'], 'EDIT GROUP'], title: "Edit group" });
+                        builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']], title: "Delete group" });
+                        builder.AddBtn({ icon: 'glyphicon-save-file', function: 'loadReport', param: [row['Id']], title: "Report" });
+
+                        return builder.build();
+                    }
+                }
+            ],
+            queryParams: function (params) {
+                var searchParams = $('#searchForm').getValues();
+                $.extend(params, searchParams);
+
+                return params;
+            }
+        });
+    }
+
+    //绑定事件
+    function bindEvent() {
+
+    }
+
+    function loadReport(Id) {
+        $.ajax({
+            url: '/Mantenimiento/Wtf_TipoHerramienta/VerReporte?Id=' + Id,
+            contentType: 'application/json; charset=utf-8',
+            datatype: 'json',
+            type: "GET",
+            success: function (data) {
+                //alert("sucess");
+                window.location = raiz + data.ruta + data.fileName;
+            }
+        });
+    }
+
+    //打开表单
+    function openForm(id, title) {
+        dialogOpen({
+            id: 'form',
+            title: title,
+            btn: ['Ok', 'Cancel'],
+            url: '/Mantenimiento/Wtf_TipoHerramienta/Form?id={0}'.format(id || ''),
+            yes: function (window, body) {
+                window.submitForm();
+            }
+        });
+    }
+
+    //删除数据
+    function deleteData(id) {
+        dialogComfirm('Are you sure?', function () {
+            var ids = [];
+
+            if (typeof (id) == 'string') {//单条数据
+                ids.push(id);
+            } else {//多条数据
+                var rows = $table.bootstrapTable('getSelections');
+                if (rows.length == 0) {
+                    dialogError('Please, select rows to delete');
+                    return;
+                } else {
+                    $.each(rows, function (index, value) {
+                        ids.push(value['Id']);
+                    })
+                }
+            }
+
+            loading();
+            $.postJSON('/Mantenimiento/Wtf_TipoHerramienta/DeleteData', { ids: JSON.stringify(ids) }, function (resJson) {
+                loading(false);
+
+                if (resJson.Success) {
+                    $table.bootstrapTable('refresh');
+                    dialogSuccess('Successfully deleted!');
+                }
+                else {
+                    dialogError(resJson.Msg);
+                }
+            });
+        });
+    }
+</script>

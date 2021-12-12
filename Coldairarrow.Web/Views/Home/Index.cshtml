@@ -1,0 +1,290 @@
+﻿@using Coldairarrow.Web;
+@using Coldairarrow.Util;
+@using Coldairarrow.Business.Common;
+
+@{
+    var menus = SystemMenuManage.GetOperatorMenu();
+    var menusJson = Html.Raw(menus.ToJson());
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Admin LTE</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="@Url.Scrpit("~/Scripts/vendor/bootstrap/css/bootstrap.min.css")">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="@Url.Scrpit("~/Scripts/vendor/adminlte/dist/css/font-awesome.min.css")">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="@Url.Scrpit("~/Scripts/vendor/adminlte/dist/css/ionicons.min.css")">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="@Url.Scrpit("~/Scripts/vendor/adminlte/dist/css/AdminLTE.min.css")">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="~/Scripts/vendor/adminlte/dist/css/skins/all-skins.min.css">
+
+
+    <!--http://aimodu.org:7777/admin/index_iframe.html?q=audio&search=#-->
+    <style type="text/css">
+
+        html {
+            overflow: hidden;
+        }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="~/Scripts/vendor/ie9/html5shiv.min.js"></script>
+    <script src="~/Scripts/vendor/ie9/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="hold-transition skin-red sidebar-mini fixed">
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>Colder 1</b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>T.M.C</b></span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span id="tituloforma"></span>
+                </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Messages: style can be found in dropdown.less-->
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="~/Scripts/vendor/adminlte/dist/img/user128x128.png" class="user-image" alt="User Image">
+                                <span class="hidden-xs">@Operator.Property.RealName</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header">
+                                    <img src="~/Scripts/vendor/adminlte/dist/img/user128x128.png" class="img-circle" alt="User Image">
+                                    <p>
+                                        @Operator.Property.RealName
+                                    </p>
+                                </li>
+                                <!-- Menu Body -->
+                                @*<li class="user-body">
+                                        <div class="row">
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#">Followers</a>
+                                            </div>
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#">Sales</a>
+                                            </div>
+                                            <div class="col-xs-4 text-center">
+                                                <a href="#">Friends</a>
+                                            </div>
+                                        </div>
+                                    </li>*@
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <button id="changePwd" class="btn btn-default btn-flat">Cambiar Contraseña</button>
+                                    </div>
+                                    <div class="pull-right">
+                                        <button id="logout" type="button" class="btn btn-default btn-flat">Salir</button>
+                                    </div>
+                                    @*</li>*@
+                            </ul>
+                        </li>
+                        <!-- Control Sidebar Toggle Button -->
+                        <li>
+                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="~/Scripts/vendor/adminlte/dist/img/user128x128.jpg" class="img-circle" alt="User Image">
+                    </div>
+                    <div class="pull-left info">
+                        <p>@Operator.Property.RealName</p>
+                        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                    </div>
+                </div>
+                <!-- search form -->
+                <form action="#" method="get" class="sidebar-form">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control">
+                        <span class="input-group-btn">
+                            <button type="button" name="search" id="search-btn" class="btn btn-flat" onclick="search_menu()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+                <!-- /.search form -->
+                <!-- sidebar menu: : style can be found in sidebar.less -->
+                <ul class="sidebar-menu"></ul>
+            </section>
+            <!-- /.sidebar -->
+        </aside>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" id="content-wrapper" style="min-height: 421px;">
+            <!--bootstrap tab风格 多标签页-->
+            <div class="content-tabs">
+                <button class="roll-nav roll-left tabLeft" onclick="scrollTabLeft()">
+                    <i class="fa fa-backward"></i>
+                </button>
+                <nav class="page-tabs menuTabs tab-ui-menu" id="tab-menu">
+                    <div class="page-tabs-content" style="margin-left: 0px;">
+                    </div>
+                </nav>
+                <button class="roll-nav roll-right tabRight" onclick="scrollTabRight()">
+                    <i class="fa fa-forward" style="margin-left: 3px;"></i>
+                </button>
+                <div class="btn-group roll-nav roll-right">
+                    <button class="dropdown tabClose" data-toggle="dropdown">
+                        Tabulacion<i class="fa fa-caret-down" style="padding-left: 3px;"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right" style="min-width: 128px;">
+                        <li><a class="tabReload" href="javascript:refreshTab();">Actualizar</a></li>
+                        <li><a class="tabCloseCurrent" href="javascript:closeCurrentTab();">Cerrar</a></li>
+                        <li><a class="tabCloseAll" href="javascript:closeOtherTabs(true);">Cerrar Todo</a></li>
+                        <li><a class="tabCloseOther" href="javascript:closeOtherTabs();">Este No</a></li>
+                    </ul>
+                </div>
+                <button class="roll-nav roll-right fullscreen" onclick="App.handleFullScreen()">
+                    <i class="fa fa-arrows-alt"></i>
+                </button>
+            </div>
+            <div class="content-iframe " style="background-color: #ffffff; ">
+                <div class="tab-content " id="tab-content">
+                </div>
+            </div>
+        </div>
+        <!-- /.content-wrapper -->
+        @*<footer class="main-footer">
+                <div class="pull-right hidden-xs">
+                    <b>Version</b> 2.3.8
+                </div>
+                <strong>Copyright &copy; 2014-2016 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights
+                reserved.
+            </footer>*@
+        <!-- Control Sidebar -->
+        
+        <!-- /.control-sidebar -->
+        <!-- Add the sidebar's background. This div must be placed
+             immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery 2.2.3 -->
+    <script src="@Url.Scrpit("~/Scripts/vendor/jQuery/jquery-2.2.3.min.js")"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src="@Url.Scrpit("~/Scripts/vendor/bootstrap/js/bootstrap.min.js")"></script>
+    <!-- Slimscroll -->
+    <script src="@Url.Scrpit("~/Scripts/vendor/slimScroll/jquery.slimscroll.min.js")"></script>
+    <!-- FastClick -->
+    <script src="@Url.Scrpit("~/Scripts/vendor/fastclick/fastclick.js")"></script>
+    <!-- AdminLTE App -->
+    <script src="@Url.Scrpit("~/Scripts/vendor/adminlte/dist/js/app.js")"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="@Url.Scrpit("~/Scripts/vendor/adminlte/dist/js/demo.js")"></script>
+    <!--tabs-->
+    <script src="@Url.Scrpit("~/Scripts/vendor/adminlte/dist/js/app_iframe.js")"></script>
+
+    <!--layer-->
+    <script src="@Url.Scrpit("~/Scripts/vendor/layer/layer.js")"></script>
+    <script src="@Url.Scrpit("~/Scripts/vendor/layer/layer-extends.js")"></script>
+
+    <!--fx-->
+    <script src="@Url.Scrpit("~/Scripts/util/util.js")"></script>
+
+    <script type="text/javascript">
+        var rootUrl = '@Url.Content("~/")';
+
+        var menus =@menusJson;
+        /**
+         * 本地搜索菜单
+         */
+        function search_menu() {
+            //要搜索的值
+            var text = $('input[name=q]').val();
+
+            var $ul = $('.sidebar-menu');
+            $ul.find("a.nav-link").each(function () {
+                var $a = $(this).css("border", "");
+
+                //判断是否含有要搜索的字符串
+                if ($a.children("span.menu-text").text().indexOf(text) >= 0) {
+
+                    //如果a标签的父级是隐藏的就展开
+                    $ul = $a.parents("ul");
+
+                    if ($ul.is(":hidden")) {
+                        $a.parents("ul").prev().click();
+                    }
+
+                    //点击该菜单
+                    $a.click().css("border", "1px solid");
+                }
+            });
+        }
+
+        $(function () {
+            //更改密码
+            $('#changePwd').click(function () {
+                dialogOpen({
+                    id: 'changePwdForm',
+                    title: 'Cambiar Contraseña',
+                    btn: ['Ok', 'Cancelar'],
+                    height: '40%',
+                    width:'50%',
+                    url: rootUrl + 'Base_SysManage/Base_User/ChangePwdForm',
+                    yes: function (window, body) {
+                        window.submitForm();
+                    }
+                });
+            });
+
+            //注销
+            $('#logout').click(function () {
+                dialogComfirm('Desea salir？', function () {
+                    $.postJSON(rootUrl + 'Home/Logout', {}, function (resJson) {
+                        if (resJson.Success)
+                            top.location.href = rootUrl + 'Home/Login';
+                    });
+                });
+            });
+
+            App.setbasePath("/Scripts/vendor/adminlte/");
+            App.setGlobalImgPath("dist/img/");
+
+            addTabs({
+                id: '324708b9-5027-4fd0-a9eb-a001d214ca72',
+                title: 'INTRO',
+                close: true,
+                url: '/Home/Desktop',
+            });
+
+            App.fixIframeCotent();
+            $('.sidebar-menu').sidebarMenu({ data: menus });
+        });
+    </script>
+</body>
+</html>

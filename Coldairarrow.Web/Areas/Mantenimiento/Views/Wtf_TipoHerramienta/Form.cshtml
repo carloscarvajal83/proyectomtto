@@ -1,0 +1,108 @@
+@using Coldairarrow.Entity.Mantenimiento;
+@using Coldairarrow.Util;
+@using Coldairarrow.Business.Mantenimiento;
+
+@{
+    Layout = "~/Views/Shared/_Layout_Form.cshtml";
+
+    var obj = (Wtf_TipoHerramienta)Model;
+    object controlIds = "[]";
+    if (!obj.Id.IsNullOrEmpty())
+    {
+        controlIds = Html.Raw(Wtf_TipoHerramientaBusiness.GetControlIds(obj.Id).ToJson());
+    }
+    var objStr = Html.Raw(obj.ToJson());
+}
+<div style="padding:15px;padding-right:45px;">
+    <form id="form" class="form-horizontal" role="form">
+
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Item Number</label>
+            <div class="col-sm-5">
+                <input name="ItemNumber" value="@obj.ItemNumber" type="text" class="form-control" required>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-5">
+                <input name="Descripcion" value="@obj.Descripcion" type="text" class="form-control" required>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Controls</label>
+            <div class="col-sm-5">
+                <table id="controlsTable" class="table-bordered"></table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button id="submit" type="submit" class="hidden">提交</button>
+        </div>
+    </form>
+</div>
+<script>
+    var theEntity = @objStr;
+    var typeId = @obj.Id;
+    var $controlstable = $('#controlsTable');
+    var controlIds =@controlIds;
+
+    $(function () {
+        initEvent();
+    });
+
+    //事件绑定
+    function initEvent() {
+        $controlstable.bootstrapTable({
+            url: '/Mantenimiento/Wtf_Controles/GetDataList_NoPagin',
+            idField: 'Id',
+            pagination: false,
+            method: 'post',
+            clickToSelect: true,
+            height: 220,
+            contentType: 'application/x-www-form-urlencoded',
+            columns: [
+                { title: 'ck', field: 'selected', checkbox: true, width: '10%' },
+                { title: 'Control', field: 'Nombre', width: '80%' }
+            ],
+            queryParams: function (params) {
+                var searchParams = { IdTipoHerramienta: typeId };
+                $.extend(params, searchParams);
+
+                return params;
+            },
+        });
+        //表单校验
+        $('#form').validator().on('submit', function (e) {
+            //校验成功
+            if (!e.isDefaultPrevented()) {
+                e.preventDefault();
+
+                var values = $('#form').getValues();
+
+                $.extend(theEntity, values);
+                theEntity['ControlIdList'] = JSON.stringify(theEntity['btSelectItem'] || []);
+                loading();
+                $.postJSON('/Mantenimiento/Wtf_TipoHerramienta/SaveData', theEntity, function (resJson) {
+                    loading(false);
+
+                    if (resJson.Success) {
+                        parent.$('#dataTable').bootstrapTable('refresh');
+                        parent.dialogSuccess();
+                        dialogClose();
+                    }
+                    else {
+                        dialogError(resJson.Msg);
+                    }
+                });
+            }
+        })
+    }
+
+    //提交表单
+    function submitForm() {
+        $('#submit').trigger('click');
+    }
+</script>
