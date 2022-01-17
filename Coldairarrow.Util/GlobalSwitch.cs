@@ -29,8 +29,8 @@ namespace Coldairarrow.Util
         /// <summary>
         /// 网站根地址
         /// </summary>
-        public static string WebRootUrl { get; set; } = "http://hqmaintenanceservices.com/";
-        // public static string WebRootUrl { get; set; } = "http://localhost:51126";
+        //public static string WebRootUrl { get; set; } = "http://hqmaintenanceservices.com/";
+        public static string WebRootUrl { get; set; } = "http://localhost:51126";
 
         #endregion
 
@@ -39,7 +39,7 @@ namespace Coldairarrow.Util
         /// <summary>
         /// 运行模式
         /// </summary>
-        public static RunModel RunModel { get; } = RunModel.Publish;
+        public static RunModel RunModel { get; } = RunModel.LocalTest;
 
         /// <summary>
         /// 网站文件根路径

@@ -350,7 +350,7 @@ $@"@{{
             </button>
             <button type=""button"" class=""btn btn-default"" aria-label=""Right Align"" onclick=""javascript: location.reload();"">
                 <span class=""glyphicon glyphicon-refresh"" aria-hidden=""true""></span>
-                REFRESHS
+                REFRESH
             </button>
         </div>
     </div>

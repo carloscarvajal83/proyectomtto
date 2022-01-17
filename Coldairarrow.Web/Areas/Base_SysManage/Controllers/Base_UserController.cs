@@ -39,6 +39,18 @@ namespace Coldairarrow.Web
 
         #endregion
 
+        public ActionResult GetDataList_NoPagin()
+        {
+            Pagination pagination = new Pagination
+            {
+                PageIndex = 1,
+                PageRows = int.MaxValue
+            };
+            var dataList = _base_UserBusiness.GetDataList(null, null, pagination);
+
+            return Content(dataList.ToJson());
+        }
+
         #region 获取数据
 
         /// <summary>

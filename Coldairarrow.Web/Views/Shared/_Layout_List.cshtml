@@ -25,7 +25,6 @@
     <link href="@Url.Scrpit("~/Scripts/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css")" rel="stylesheet">
     <script src="@Url.Scrpit("~/Scripts/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js")"></script>
     <script src="@Url.Scrpit("~/Scripts/vendor/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.es.js")"></script>
-
     <!--layer-->
     <script src="@Url.Scrpit("~/Scripts/vendor/layer/layer.js")"></script>
     <script src="@Url.Scrpit("~/Scripts/vendor/layer/layer-extends.js")"></script>
@@ -40,5 +39,7 @@
     </script>
 
     @RenderBody()
+    @RenderSection("toolbar", required: false)
+    @RenderSection("foottoolbar", required: false)
 </body>
 </html>

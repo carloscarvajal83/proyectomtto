@@ -14,14 +14,21 @@
                 <th>文件</th>
                 <td>
                     <input style="display:none" id="file" type="file" accept="*">
-                    <input id="file-display" class="easyui-textbox" data-options="width:'200px',required:true">
+                    <input id="file-display" class="easyui-textbox" data-options="required:true">
                     <label for="file" class="easyui-linkbutton" data-options="iconCls:'icon-add'">选择文件</label>
                 </td>
             </tr>
         </tbody>
     </table>
+    <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label">Imagen</label>
+        <div class="col-sm-5">
+            <img id="imgLoaded" class="user-image" alt="User Image" style="width: 100px; height:100px"/>
+        </div>
+    </div>
 </form>
 @section foottoolbar{
+    <script src="@Url.Scrpit("~/Scripts/vendor/JQyeryEasyUi/jquery.easyui.min.js")"></script>
     <a id="saveForm" href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-save'">上传</a>
 }
 <script>
@@ -29,6 +36,7 @@
         document.getElementById('file').onchange = function () {
             $('#file').getFileBase64(function (base64, fileName) {
                 $('#file-display').textbox('setValue', fileName);
+                $('#imgLoaded').attr('src', "data:image/png;base64, " + base64);
             });
         };
 
@@ -44,8 +52,8 @@
 
                     if (resJson.Success) {
                         parent.dialogMsg('上传成功!');
-                        parent.$('#dataTable').datagrid('clearChecked').datagrid('reload');
-                        parent.dialogClose('UploadFileForm');
+                        //parent.$('#dataTable').datagrid('clearChecked').datagrid('reload');
+                        //parent.dialogClose('UploadFileForm');
                     }
                     else {
                         dialogError(resJson.Msg);

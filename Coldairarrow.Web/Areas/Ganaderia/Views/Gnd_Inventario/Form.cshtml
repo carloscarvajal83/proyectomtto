@@ -1,0 +1,205 @@
+@using Coldairarrow.Entity.Ganaderia;
+@using Coldairarrow.Util;
+
+@{
+    Layout = "~/Views/Shared/_Layout_Form.cshtml";
+
+    var obj = (Gnd_Inventario)Model;
+    var objStr = Html.Raw(obj.ToJson());
+}
+<div style="padding:15px;padding-right:45px;">
+    <form id="form" class="form-horizontal" role="form">
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Propietario</label>
+            <div class="col-sm-5">
+                <select id="ownerList" class="selectpicker form-control" name="ownerList" data-style="btn-default btn-sm" required title="Select one"></select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Finca</label>
+            <div class="col-sm-5">
+                <select id="farmList" class="selectpicker form-control" name="farmList" data-style="btn-default btn-sm" required title="Select one"></select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Animal</label>
+            <div class="col-sm-5">
+                <select id="typeList" class="selectpicker form-control" name="typeList" data-style="btn-default btn-sm" required title="Select one"></select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Descripcion</label>
+            <div class="col-sm-5">
+                <input name="Descripcion" value="@obj.Descripcion" type="text" class="form-control" required>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm" id="container" style="position:relative">
+            <label class="col-sm-2 control-label">Fecha Nacimiento</label>
+            <div class="col-sm-5" style="position:relative">
+                <input id="FechaNacimiento" name="FechaNacimiento" type="text" value="@(obj.FechaNacimiento != DateTime.MinValue ? obj.FechaNacimiento.ToString("yyyy-MM-dd"): ("2020-01-01"))" data-date-format="yyyy-mm-dd" class="form-control" required autocomplete="off">
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Genero</label>
+            <div class="col-sm-5">
+                <select id="genreList" name="genreList" class="selectpicker form-control" data-style="btn-default btn-sm" disabled>
+                    <option value="1">Macho</option>
+                    <option value="2">Hembra</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Imagen</label>
+            <div class="col-sm-3">
+                <input name="ImagenFile" id="ImagenFile" type="file" class="form-control" accept="image/*">
+                <div class="help-block with-errors"></div>
+            </div>
+            <div class="col-sm-2">
+                <img id="imgLoaded" alt="Image" style="width: 100%; height:100%" />
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Crias?</label>
+            <div class="col-sm-5">
+                <select id="hasChildrenList" name="hasChildrenList" class="selectpicker form-control" data-style="btn-default btn-sm">
+                    <option value="0">No</option>
+                    <option value="1">Si</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <button id="submit" type="submit" class="hidden">提交</button>
+        </div>
+    </form>
+</div>
+<script>
+    var theEntity = @objStr;
+    var ownerId = @obj.IdPropietario;
+    var farmId = @obj.IdFinca;
+    var typeId = @obj.IdTipoInventario;
+
+    $(function () {
+        initEvent();
+    });
+
+    function changeGenre(value) {
+        $('#genreList').selectpicker({
+            value: value
+        });
+    }
+
+    //事件绑定
+    function initEvent() {
+
+        $('#ownerList').selectpicker({
+            url: '/Ganaderia/Gnd_Propietario/GetDataList_NoPagin',
+            value: ownerId,
+            valueField: 'Id',
+            textField: 'Descripcion',
+            pleaseSelect: false
+        });
+        $('#ownerList').on('refreshed.bs.select', function (e) {
+            // calls on data loaded
+            if (ownerId > 0) {
+                $(this).selectpicker('val', ownerId);
+            }
+        });
+
+        $('#farmList').selectpicker({
+            url: '/Ganaderia/Gnd_Finca/GetDataList_NoPagin',
+            value: farmId,
+            valueField: 'Id',
+            textField: 'Descripcion',
+            pleaseSelect: false
+        });
+        $('#farmList').on('refreshed.bs.select', function (e) {
+            // calls on data loaded
+            if (farmId > 0) {
+                $(this).selectpicker('val', farmId);
+            }
+        });
+
+
+        $('#typeList').selectpicker({
+            url: '/Ganaderia/Gnd_TipoInventario/GetDataList_NoPagin',
+            value: typeId,
+            valueField: 'Id',
+            textField: 'Descripcion',
+            pleaseSelect: false
+        });
+        $('#typeList').on('refreshed.bs.select', function (e) {
+            // calls on data loaded
+            if (typeId > 0) {
+                $(this).selectpicker('val', typeId);
+            }
+        }).on('changed.bs.select', function (e) {
+            // calls on data loaded
+            let idSexo = $(this).data("option").data[e.currentTarget.selectedIndex - 1].IdSexo;
+            changeGenre(idSexo);
+        });
+
+        $('#FechaNacimiento').datetimepicker({
+            language: 'es',
+            minView: 2//日期选择
+        });
+
+        changeGenre(theEntity.Sexo);
+
+        $('#ImagenFile').on('change', function () {
+            $('#ImagenFile').getFileBase64(function (base64, fileName) {
+                $('#imgLoaded').attr('src', "data:image/png;base64, " + base64);
+                theEntity['ImagenNombre'] = $("#ImagenFile")[0].files[0].name;
+                theEntity['ImagenBase64'] = base64;
+            });
+        });
+
+        $('#hasChildrenList').selectpicker({
+            value: theEntity.EsPadre ? 1 : 0
+        });
+
+        if (theEntity.ImagenUrl) {
+            $('#imgLoaded').attr('src', theEntity.ImagenUrl);
+        }
+
+        //表单校验
+        $('#form').validator().on('submit', function (e) {
+            //校验成功
+            if (!e.isDefaultPrevented()) {
+                e.preventDefault();
+
+                var values = $('#form').getValues();
+                $.extend(theEntity, values);
+                theEntity['IdPropietario'] = $('#ownerList').val();
+                theEntity['IdFinca'] = $('#farmList').val();
+                theEntity['IdTipoInventario'] = $('#typeList').val();
+                theEntity['Sexo'] = $('#genreList').val();
+                theEntity['EsPadre'] = Number($('#hasChildrenList').val()) == 1;
+                loading();
+                $.postJSON('/Ganaderia/Gnd_Inventario/SaveData', theEntity, function (resJson) {
+                    loading(false);
+
+                    if (resJson.Success) {
+                        parent.$('#dataTable').bootstrapTable('refresh');
+                        parent.dialogSuccess();
+                        dialogClose();
+                    }
+                    else {
+                        dialogError(resJson.Msg);
+                    }
+                });
+            }
+        })
+    }
+
+    //提交表单
+    function submitForm() {
+        $('#submit').trigger('click');
+    }
+</script>
