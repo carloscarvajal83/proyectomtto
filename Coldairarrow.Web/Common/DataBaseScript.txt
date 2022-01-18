@@ -1,12 +1,11 @@
 ﻿USE [Ganaderia]
 GO
--- NOTA: ELIMINAR LOS CAMPOS [Marcado] [FechaVenta] [FechaDeceso] de la tabla Gnd_Inventario despues de creado para este backup
-/****** Object:  User [chbootreader]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  User [chbootreader]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 CREATE USER [chbootreader] WITHOUT LOGIN WITH DEFAULT_SCHEMA=[dbo]
 GO
 ALTER ROLE [db_owner] ADD MEMBER [chbootreader]
 GO
-/****** Object:  Table [dbo].[Gnd_Inventario]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Gnd_Inventario]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -30,13 +29,16 @@ CREATE TABLE [dbo].[Gnd_Inventario](
 	[Marcado] [bit] NOT NULL,
 	[FechaVenta] [date] NULL,
 	[FechaDeceso] [date] NULL,
+	[FechaCompra] [date] NULL,
+	[FechaPerdida] [date] NULL,
+	[EsCompra] [bit] NOT NULL,
  CONSTRAINT [PK_Gnd_Inventario] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Gnd_TipoInventario]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Gnd_TipoInventario]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -53,7 +55,7 @@ CREATE TABLE [dbo].[Gnd_TipoInventario](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Gnd_Finca]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Gnd_Finca]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -68,7 +70,7 @@ CREATE TABLE [dbo].[Gnd_Finca](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Gnd_Propietario]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Gnd_Propietario]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -83,7 +85,7 @@ CREATE TABLE [dbo].[Gnd_Propietario](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[Gnd_vInventario]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  View [dbo].[Gnd_vInventario]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -91,14 +93,15 @@ GO
 CREATE VIEW [dbo].[Gnd_vInventario]
 AS
 SELECT        INV.Id, INV.IdPadre, INV.IdPropietario, INV.IdFinca, INV.IdEstado, INV.IdTipoInventario, INV.Descripcion, INV.FechaNacimiento, INV.Sexo, INV.Produccion, INV.IdUsuario, INV.ImagenUrl, INV.ImagenNombre, INV.EsPadre, 
-                         PROP.Descripcion AS Propietario, FI.Descripcion AS Finca, TI.Descripcion AS TipoInventario, INV2.Descripcion AS Padre
+                         PROP.Descripcion AS Propietario, FI.Descripcion AS Finca, TI.Descripcion AS TipoInventario, INV2.Descripcion AS Padre, INV.Codigo, INV.Marcado, INV.FechaVenta, INV.FechaDeceso, INV.FechaCompra, INV.FechaPerdida, 
+                         INV.EsCompra
 FROM            dbo.Gnd_Inventario AS INV INNER JOIN
                          dbo.Gnd_Propietario AS PROP ON INV.IdPropietario = PROP.Id INNER JOIN
                          dbo.Gnd_Finca AS FI ON INV.IdFinca = FI.Id INNER JOIN
                          dbo.Gnd_TipoInventario AS TI ON INV.IdTipoInventario = TI.Id LEFT OUTER JOIN
                          dbo.Gnd_Inventario AS INV2 ON INV.IdPadre = INV2.Id
 GO
-/****** Object:  Table [dbo].[Wtf_Herramientas]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Wtf_Herramientas]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -119,7 +122,7 @@ CREATE TABLE [dbo].[Wtf_Herramientas](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Wtf_Ubicaciones]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Wtf_Ubicaciones]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -134,7 +137,7 @@ CREATE TABLE [dbo].[Wtf_Ubicaciones](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Wtf_TipoHerramienta]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Wtf_TipoHerramienta]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -149,7 +152,7 @@ CREATE TABLE [dbo].[Wtf_TipoHerramienta](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Wtf_ClaseHerramienta]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Wtf_ClaseHerramienta]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -163,7 +166,7 @@ CREATE TABLE [dbo].[Wtf_ClaseHerramienta](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[Wtf_vHerramientas]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  View [dbo].[Wtf_vHerramientas]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -177,7 +180,7 @@ FROM            dbo.Wtf_Herramientas AS H INNER JOIN
                          dbo.Wtf_ClaseHerramienta AS CH ON H.IdClaseHerramienta = CH.Id INNER JOIN
                          dbo.Wtf_Ubicaciones AS UB ON H.IdUbicacion = UB.Id
 GO
-/****** Object:  Table [dbo].[Wtf_ControlesTipoHerramienta]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Wtf_ControlesTipoHerramienta]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -192,7 +195,7 @@ CREATE TABLE [dbo].[Wtf_ControlesTipoHerramienta](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Wtf_RegistroInspecciones]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Wtf_RegistroInspecciones]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -210,7 +213,7 @@ CREATE TABLE [dbo].[Wtf_RegistroInspecciones](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Wtf_Controles]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Wtf_Controles]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -226,7 +229,7 @@ CREATE TABLE [dbo].[Wtf_Controles](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[Wtf_vReporteControlesHerramienta]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  View [dbo].[Wtf_vReporteControlesHerramienta]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -251,7 +254,7 @@ FROM            dbo.Wtf_Herramientas AS H INNER JOIN
                                WHERE        (RI.Activo = 1) OR
                                                          (RI.Activo IS NULL)) AS TH ON TH.Id = H.Id
 GO
-/****** Object:  Table [dbo].[Base_AppSecret]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_AppSecret]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -263,7 +266,7 @@ CREATE TABLE [dbo].[Base_AppSecret](
 	[AppName] [varchar](255) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_DatabaseLink]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_DatabaseLink]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -276,7 +279,7 @@ CREATE TABLE [dbo].[Base_DatabaseLink](
 	[SortNum] [varchar](50) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_PermissionAppId]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_PermissionAppId]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -287,7 +290,7 @@ CREATE TABLE [dbo].[Base_PermissionAppId](
 	[PermissionValue] [varchar](50) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_PermissionRole]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_PermissionRole]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -298,7 +301,7 @@ CREATE TABLE [dbo].[Base_PermissionRole](
 	[PermissionValue] [varchar](50) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_PermissionUser]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_PermissionUser]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -309,7 +312,7 @@ CREATE TABLE [dbo].[Base_PermissionUser](
 	[PermissionValue] [varchar](50) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_SysLog]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_SysLog]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -322,7 +325,7 @@ CREATE TABLE [dbo].[Base_SysLog](
 	[OpTime] [datetime] NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_SysRole]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_SysRole]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -333,7 +336,7 @@ CREATE TABLE [dbo].[Base_SysRole](
 	[RoleName] [nvarchar](50) NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_UnitTest]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_UnitTest]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -349,7 +352,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_User]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_User]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -364,7 +367,7 @@ CREATE TABLE [dbo].[Base_User](
 	[Birthday] [date] NULL
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Base_UserRoleMap]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Base_UserRoleMap]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -379,7 +382,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Dev_Project]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Dev_Project]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -396,7 +399,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Dev_ProjectType]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Dev_ProjectType]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -411,7 +414,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Gnd_Estado]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Gnd_Estado]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -425,7 +428,7 @@ CREATE TABLE [dbo].[Gnd_Estado](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Gnd_RegistroInspecciones]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Gnd_RegistroInspecciones]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -443,7 +446,7 @@ CREATE TABLE [dbo].[Gnd_RegistroInspecciones](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Gnd_TipoInspeccion]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Gnd_TipoInspeccion]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -458,7 +461,7 @@ CREATE TABLE [dbo].[Gnd_TipoInspeccion](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Wtf_Tools]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Table [dbo].[Wtf_Tools]    Script Date: 18/01/2022 6:51:09 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -771,9 +774,13 @@ INSERT [dbo].[Dev_Project] ([Id], [ProjectId], [ProjectName], [ProjectTypeId], [
 GO
 SET IDENTITY_INSERT [dbo].[Gnd_Estado] ON 
 GO
-INSERT [dbo].[Gnd_Estado] ([Id], [Descripcion]) VALUES (1, N'Activa')
+INSERT [dbo].[Gnd_Estado] ([Id], [Descripcion]) VALUES (1, N'Activo')
 GO
-INSERT [dbo].[Gnd_Estado] ([Id], [Descripcion]) VALUES (2, N'Inactiva')
+INSERT [dbo].[Gnd_Estado] ([Id], [Descripcion]) VALUES (2, N'Vendido')
+GO
+INSERT [dbo].[Gnd_Estado] ([Id], [Descripcion]) VALUES (3, N'Muerto')
+GO
+INSERT [dbo].[Gnd_Estado] ([Id], [Descripcion]) VALUES (4, N'Robo Pérdida')
 GO
 SET IDENTITY_INSERT [dbo].[Gnd_Estado] OFF
 GO
@@ -789,25 +796,33 @@ SET IDENTITY_INSERT [dbo].[Gnd_Finca] OFF
 GO
 SET IDENTITY_INSERT [dbo].[Gnd_Inventario] ON 
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (1, NULL, 2, 2, 1, 7, N'Toero 01 Sofia', CAST(N'2018-10-03' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/ternera01.jfif', N'ternera01.jfif', 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (1, NULL, 2, 2, 1, 7, N'Toro 01 Sofia', CAST(N'2018-10-03' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/ternera01.jfif', N'ternera01.jfif', 0, 5, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (2, NULL, 3, 3, 1, 5, N'Novillo MC 01 Carlos', CAST(N'2020-06-18' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/ternera02.jpg', N'ternera02.jpg', 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (2, 10, 3, 3, 1, 5, N'Novillo MC 01 Carlos', CAST(N'2020-06-18' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/ternera02.jpg', N'ternera02.jpg', 0, 6, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (3, NULL, 3, 3, 1, 9, N'Ternera P 01 Carlos', CAST(N'2021-10-18' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/neveraervices1.jpg', N'neveraervices1.jpg', 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (3, NULL, 3, 3, 1, 9, N'Ternera P 01 Carlos', CAST(N'2021-10-18' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/neveraervices1.jpg', N'neveraervices1.jpg', 0, 7, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (4, NULL, 3, 3, 1, 6, N'Machos NV 01 Carlos', CAST(N'2019-02-14' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/airesservices.jpg', N'airesservices.jpg', 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (4, NULL, 3, 3, 1, 6, N'Machos NV 01 Carlos', CAST(N'2019-02-14' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/airesservices.jpg', N'airesservices.jpg', 0, 8, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (5, NULL, 1, 1, 1, 5, N'Novillo MC 01 Oscar', CAST(N'2020-07-15' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (5, NULL, 1, 1, 1, 5, N'Novillo MC 01 Oscar', CAST(N'2020-07-15' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 9, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (6, NULL, 1, 1, 1, 15, N'Vaca 01 Oscar', CAST(N'2018-08-17' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (6, NULL, 1, 1, 1, 15, N'Vaca 01 Oscar', CAST(N'2018-08-17' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 1, 10, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (7, NULL, 1, 1, 1, 12, N'Ternera LV 01 Oscar', CAST(N'2020-12-24' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (7, NULL, 1, 1, 1, 12, N'Ternera LV 01 Oscar', CAST(N'2020-12-24' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 11, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (8, NULL, 2, 2, 1, 14, N'Novillas V 01 Sofia', CAST(N'2019-04-03' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (8, NULL, 2, 2, 1, 14, N'Novillas V 01 Sofia', CAST(N'2019-04-03' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 12, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (9, NULL, 2, 2, 1, 11, N'Ternera 24 01 Sofia', CAST(N'2021-04-14' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (9, NULL, 2, 2, 1, 11, N'Ternera 24 01 Sofia', CAST(N'2021-04-14' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 13, 0, NULL, NULL, NULL, NULL, 0)
 GO
-INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso]) VALUES (10, NULL, 3, 3, 1, 15, N'Vaca 01 Carlos', CAST(N'2018-06-13' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 0, 0, NULL, NULL)
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (10, NULL, 3, 3, 1, 15, N'Vaca 01 Carlos', CAST(N'2018-06-13' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 1, 14, 0, NULL, NULL, NULL, NULL, 0)
+GO
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (11, NULL, 2, 2, 1, 6, N'Machos novillos 01 Sofia', CAST(N'2019-09-10' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 15, 0, NULL, NULL, NULL, NULL, 0)
+GO
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (12, NULL, 1, 1, 1, 6, N'Machos NV 02 Oscar', CAST(N'2019-08-14' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 16, 0, NULL, NULL, NULL, NULL, 0)
+GO
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (13, 10, 3, 3, 1, 13, N'Novilla MC 02 Carlos', CAST(N'2020-02-05' AS Date), 2, CAST(0.00 AS Decimal(4, 2)), N'Admin', NULL, NULL, 0, 17, 0, NULL, NULL, CAST(N'2020-01-01' AS Date), NULL, 0)
+GO
+INSERT [dbo].[Gnd_Inventario] ([Id], [IdPadre], [IdPropietario], [IdFinca], [IdEstado], [IdTipoInventario], [Descripcion], [FechaNacimiento], [Sexo], [Produccion], [IdUsuario], [ImagenUrl], [ImagenNombre], [EsPadre], [Codigo], [Marcado], [FechaVenta], [FechaDeceso], [FechaCompra], [FechaPerdida], [EsCompra]) VALUES (14, 10, 3, 3, 1, 4, N'Novillo LV 02 Carlos', CAST(N'2020-11-11' AS Date), 1, CAST(0.00 AS Decimal(4, 2)), N'Admin', N'/Upload/File/13-07-levante_0.jpg', N'13-07-levante_0.jpg', 0, 18, 0, NULL, NULL, CAST(N'2021-01-12' AS Date), NULL, 1)
 GO
 SET IDENTITY_INSERT [dbo].[Gnd_Inventario] OFF
 GO
@@ -3067,7 +3082,7 @@ SET IDENTITY_INSERT [dbo].[Wtf_Ubicaciones] OFF
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [PK__Base_App__3214EC060B627A5B]    Script Date: 17/01/2022 10:23:02 a. m. ******/
+/****** Object:  Index [PK__Base_App__3214EC060B627A5B]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_AppSecret] ADD PRIMARY KEY NONCLUSTERED 
 (
 	[Id] ASC
@@ -3075,7 +3090,7 @@ ALTER TABLE [dbo].[Base_AppSecret] ADD PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [PK__Base_Dat__3214EC06E7BC62EA]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [PK__Base_Dat__3214EC06E7BC62EA]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_DatabaseLink] ADD PRIMARY KEY NONCLUSTERED 
 (
 	[Id] ASC
@@ -3083,7 +3098,7 @@ ALTER TABLE [dbo].[Base_DatabaseLink] ADD PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [PK__Base_Per__3214EC0664F55652]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [PK__Base_Per__3214EC0664F55652]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_PermissionAppId] ADD PRIMARY KEY NONCLUSTERED 
 (
 	[Id] ASC
@@ -3091,7 +3106,7 @@ ALTER TABLE [dbo].[Base_PermissionAppId] ADD PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [PK__Base_Per__3214EC06A5BC8E39]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [PK__Base_Per__3214EC06A5BC8E39]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_PermissionRole] ADD PRIMARY KEY NONCLUSTERED 
 (
 	[Id] ASC
@@ -3099,7 +3114,7 @@ ALTER TABLE [dbo].[Base_PermissionRole] ADD PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [PK__Base_Per__3214EC0618D311CA]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [PK__Base_Per__3214EC0618D311CA]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_PermissionUser] ADD PRIMARY KEY NONCLUSTERED 
 (
 	[Id] ASC
@@ -3107,7 +3122,7 @@ ALTER TABLE [dbo].[Base_PermissionUser] ADD PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [PK__Base_Sys__3214EC0620094433]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [PK__Base_Sys__3214EC0620094433]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_SysLog] ADD PRIMARY KEY NONCLUSTERED 
 (
 	[Id] ASC
@@ -3115,7 +3130,7 @@ ALTER TABLE [dbo].[Base_SysLog] ADD PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [PK__Base_Sys__3214EC065ADAE78D]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [PK__Base_Sys__3214EC065ADAE78D]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_SysRole] ADD PRIMARY KEY NONCLUSTERED 
 (
 	[Id] ASC
@@ -3123,7 +3138,7 @@ ALTER TABLE [dbo].[Base_SysRole] ADD PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Base_Uni__1788CC4D5B0CB0BA]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [UQ__Base_Uni__1788CC4D5B0CB0BA]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_UnitTest] ADD UNIQUE NONCLUSTERED 
 (
 	[UserId] ASC
@@ -3131,7 +3146,7 @@ ALTER TABLE [dbo].[Base_UnitTest] ADD UNIQUE NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [PK__Base_Use__3214EC06516C6FB8]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [PK__Base_Use__3214EC06516C6FB8]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_User] ADD PRIMARY KEY NONCLUSTERED 
 (
 	[Id] ASC
@@ -3139,7 +3154,7 @@ ALTER TABLE [dbo].[Base_User] ADD PRIMARY KEY NONCLUSTERED
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ__Base_Use__C9F284568A499AE2]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Index [UQ__Base_Use__C9F284568A499AE2]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 ALTER TABLE [dbo].[Base_User] ADD UNIQUE NONCLUSTERED 
 (
 	[UserName] ASC
@@ -3152,6 +3167,8 @@ GO
 ALTER TABLE [dbo].[Gnd_Inventario] ADD  CONSTRAINT [DF_Gnd_Inventario_Codigo]  DEFAULT ((0)) FOR [Codigo]
 GO
 ALTER TABLE [dbo].[Gnd_Inventario] ADD  CONSTRAINT [DF_Gnd_Inventario_Marcado]  DEFAULT ((0)) FOR [Marcado]
+GO
+ALTER TABLE [dbo].[Gnd_Inventario] ADD  CONSTRAINT [DF_Gnd_Inventario_EsCompra]  DEFAULT ((0)) FOR [EsCompra]
 GO
 ALTER TABLE [dbo].[Wtf_RegistroInspecciones] ADD  CONSTRAINT [DF_Wtf_RegistroInspecciones_Activo]  DEFAULT ((1)) FOR [Activo]
 GO
@@ -3170,7 +3187,7 @@ REFERENCES [dbo].[Wtf_Ubicaciones] ([Id])
 GO
 ALTER TABLE [dbo].[Wtf_Herramientas] CHECK CONSTRAINT [FK_Wtf_Herramientas_Wtf_Ubicaciones]
 GO
-/****** Object:  Trigger [dbo].[Gnd_ActualizaFechaNacimiento]    Script Date: 17/01/2022 10:23:03 a. m. ******/
+/****** Object:  Trigger [dbo].[Gnd_ActualizaFechaNacimiento]    Script Date: 18/01/2022 6:51:10 p. m. ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -3376,7 +3393,7 @@ Begin DesignProperties =
    Begin PaneConfigurations = 
       Begin PaneConfiguration = 0
          NumPanes = 4
-         Configuration = "(H (1[76] 4[5] 2[1] 3) )"
+         Configuration = "(H (1[57] 4[12] 2[6] 3) )"
       End
       Begin PaneConfiguration = 1
          NumPanes = 3
@@ -3438,7 +3455,7 @@ Begin DesignProperties =
    End
    Begin DiagramPane = 
       Begin Origin = 
-         Top = 0
+         Top = -311
          Left = 0
       End
       Begin Tables = 
@@ -3446,7 +3463,7 @@ Begin DesignProperties =
             Begin Extent = 
                Top = 41
                Left = 271
-               Bottom = 350
+               Bottom = 472
                Right = 453
             End
             DisplayFlags = 280
@@ -3516,9 +3533,9 @@ Begin DesignProperties =
          Column = 1440
          Alias = 900
          Table = 1170
-        ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'Gnd_vInventario'
+    ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'Gnd_vInventario'
 GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N' Output = 720
+EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'     Output = 720
          Append = 1400
          NewValue = 1170
          SortType = 1350
