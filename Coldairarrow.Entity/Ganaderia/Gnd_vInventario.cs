@@ -101,5 +101,19 @@ namespace Coldairarrow.Entity.Ganaderia
         /// </summary>
         public String Padre { get; set; }
 
+        public Int32? Codigo { get; set; }
+
+        public Boolean Marcado { get; set; }
+
+        public DateTime? FechaVenta { get; set; }
+
+        public DateTime? FechaDeceso { get; set; }
+
+        public DateTime? FechaCompra { get; set; }
+
+        public DateTime? FechaPerdida { get; set; }
+
+        public Boolean EsCompra { get; set; }
+
     }
 }

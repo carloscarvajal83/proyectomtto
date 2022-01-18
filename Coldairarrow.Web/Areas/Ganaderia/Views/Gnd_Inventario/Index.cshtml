@@ -25,10 +25,8 @@
                 <label>Consulta</label>
                 <select class="selectpicker" name="condition" data-style="btn-default btn-sm" data-width="100px">
                     <option value="">Seleccione</option>
-                    
+                    <option value="Propietario">Propietario</option>
                     <option value="Descripcion">Descripcion</option>
-                    <option value="IdUsuario">IdUsuario</option>
-                    <option value="ImagenUrl">ImagenUrl</option>
                 </select>
                 <input type="text" class="form-control input-sm" name="keyword" placeholder="Ingrese Texto">
             </div>
@@ -65,10 +63,11 @@
             contentType: 'application/x-www-form-urlencoded',
             queryParamsType: '',
             pageNumber: 1,
-            pageSize: 30,
-            pageList: [10, 30, 60, 100],
+            pageSize: 5,
+            pageList: [5, 10, 25, 50],
             columns: [
                 { title: 'ck', field: 'ck', checkbox: true, width: '3%' },
+                { title: 'Consec.', field: 'Codigo', width: '5%' },
                 { title: 'Animal', field: 'TipoInventario', width: '25%' },
                 { title: 'Propietario', field: 'Propietario', width: '15%' },
                 { title: 'Finca', field: 'Finca', width: '15%' },

@@ -46,6 +46,18 @@ namespace Coldairarrow.Web
 
         #endregion
 
+        public ActionResult GetParentsDataList_NoPagin()
+        {
+            Pagination pagination = new Pagination
+            {
+                PageIndex = 1,
+                PageRows = int.MaxValue
+            };
+            var dataList = _gnd_InventarioBusiness.GetParentDataList(null, null, pagination);
+
+            return Content(dataList.ToJson());
+        }
+
         #region 提交数据
 
         /// <summary>
@@ -60,10 +72,25 @@ namespace Coldairarrow.Web
             {
                 theData.IdUsuario = Operator.UserId;
                 theData.IdEstado = 1;
+                bool consecutivoExiste = _gnd_InventarioBusiness.ValidarConsecutivoExiste(theData);
+                int consecutivo = _gnd_InventarioBusiness.ObtenerSiguienteConsecutivo(theData);
+                if (consecutivoExiste) {
+                    return Error($"El consecutivo {theData.Codigo} ya existe, El proximo consecutivo disponible es el {consecutivo}");
+                }
+                if(consecutivo != theData.Codigo)
+                {
+                    return Error("El proximo consecutivo debe ser el  " + consecutivo);
+                }
                 _gnd_InventarioBusiness.AddData(theData);
             }
             else
             {
+                bool consecutivoExiste = _gnd_InventarioBusiness.ValidarConsecutivoExiste(theData, false);
+                int consecutivo = _gnd_InventarioBusiness.ObtenerSiguienteConsecutivo(theData);
+                if (consecutivoExiste)
+                {
+                    return Error($"El consecutivo {theData.Codigo} ya existe, El proximo consecutivo disponible es el {consecutivo}");
+                }
                 _gnd_InventarioBusiness.UpdateData(theData);
             }
             UploadFile(theData.ImagenBase64, theData.ImagenNombre, imagenUrl);
@@ -79,6 +106,13 @@ namespace Coldairarrow.Web
             _gnd_InventarioBusiness.DeleteData(ids.ToList<string>());
 
             return Success("删除成功！");
+        }
+
+        public ActionResult GetNextCode() {
+            Gnd_Inventario theData = new Gnd_Inventario();
+            theData.IdUsuario = Operator.UserId;
+            int consecutivo = _gnd_InventarioBusiness.ObtenerSiguienteConsecutivo(theData);
+            return Content(consecutivo.ToString());
         }
 
         public void UploadFile(string fileBase64, string fileName, string folder)

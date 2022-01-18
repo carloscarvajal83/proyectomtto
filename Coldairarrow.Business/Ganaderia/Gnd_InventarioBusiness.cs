@@ -28,6 +28,17 @@ namespace Coldairarrow.Business.Ganaderia
             return q.GetPagination(pagination).ToList();
         }
 
+
+        public List<Gnd_Inventario> GetParentDataList(string condition, string keyword, Pagination pagination)
+        {
+            var q = GetIQueryable();
+
+            //模糊查询
+            q = q.Where(c => c.Sexo == 2 && c.EsPadre);
+
+            return q.GetPagination(pagination).ToList();
+        }
+
         /// <summary>
         /// 获取指定的单条数据
         /// </summary>
@@ -71,6 +82,29 @@ namespace Coldairarrow.Business.Ganaderia
         #endregion
 
         #region 数据模型
+
+        public bool ValidarConsecutivoExiste(Gnd_Inventario theData, bool nuevo = true)
+        {
+            var q = GetIQueryable();
+            int conteo = 0;
+            if (nuevo)
+            {
+                conteo = q.Where(c => c.Codigo == theData.Codigo && c.IdUsuario == theData.IdUsuario).Count();
+            }
+            else
+            {
+                conteo = q.Where(c => c.Codigo == theData.Codigo && c.Id != theData.Id && c.IdUsuario == theData.IdUsuario).Count();
+            }
+            return conteo > 0;
+        }
+
+        public int ObtenerSiguienteConsecutivo(Gnd_Inventario theData)
+        {
+            var q = GetIQueryable();
+            int? conteo = 0;
+            conteo = q.Where(x => x.IdUsuario == theData.IdUsuario).Max(x => x.Codigo);
+            return conteo > 1 ? (int)conteo  + 1 : 1;
+        }
 
         #endregion
     }
