@@ -1,3 +1,4 @@
+using Coldairarrow.Business.Common;
 using Coldairarrow.Entity.Ganaderia;
 using Coldairarrow.Util;
 using System;
@@ -22,8 +23,28 @@ namespace Coldairarrow.Business.Ganaderia
             var q = GetIQueryable();
 
             //模糊查询
-            if (!condition.IsNullOrEmpty() && !keyword.IsNullOrEmpty())
-                q = q.Where($@"{condition}.Contains(@0)", keyword);
+            if (!condition.IsNullOrEmpty() && !keyword.IsNullOrEmpty()) {
+                int keyInt = 0;
+                int.TryParse(keyword, out keyInt);
+                if (keyInt > 0)
+                {
+                    q = q.Where($@"{condition}.Equals(@0)", keyword);
+                }
+                else {
+                    q = q.Where($@"{condition}.Contains(@0)", keyword);
+                }
+            }
+            q = q.Where(c => c.IdUsuario == Operator.Id);
+
+            return q.GetPagination(pagination).ToList();
+        }
+
+        public List<Gnd_vInventario> GetParentDataList(string condition, string keyword, Pagination pagination)
+        {
+            var q = GetIQueryable();
+
+            //模糊查询
+            q = q.Where(c => c.Sexo == 2 && c.EsPadre && c.IdUsuario == Operator.Id);
 
             return q.GetPagination(pagination).ToList();
         }

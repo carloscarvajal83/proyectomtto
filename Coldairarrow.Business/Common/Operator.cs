@@ -22,6 +22,14 @@ namespace Coldairarrow.Business.Common
             }
         }
 
+        public static string Id
+        {
+            get
+            {
+                return SessionHelper.Session["Id"]?.ToString();
+            }
+        }
+
         public static Base_UserModel Property { get => Base_UserBusiness.GetTheUser(UserId); }
 
         #region 操作方法
@@ -39,9 +47,10 @@ namespace Coldairarrow.Business.Common
         /// 登录
         /// </summary>
         /// <param name="userId">用户逻辑主键Id</param>
-        public static void Login(string userId)
+        public static void Login(string userId, string id)
         {
             SessionHelper.Session["UserId"] = userId;
+            SessionHelper.Session["Id"] = id;
         }
 
         /// <summary>
@@ -50,6 +59,7 @@ namespace Coldairarrow.Business.Common
         public static void Logout()
         {
             SessionHelper.Session["UserId"] = null;
+            SessionHelper.Session["Id"] = null;
         }
 
         /// <summary>

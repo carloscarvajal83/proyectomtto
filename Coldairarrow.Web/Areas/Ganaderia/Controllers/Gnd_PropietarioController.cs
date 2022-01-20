@@ -1,3 +1,4 @@
+using Coldairarrow.Business.Common;
 using Coldairarrow.Business.Ganaderia;
 using Coldairarrow.Entity.Ganaderia;
 using Coldairarrow.Util;
@@ -66,6 +67,7 @@ namespace Coldairarrow.Web
         {
             if(!(theData.Id>0))
             {
+                theData.IdUsuario = Operator.Id;
                 _gnd_PropietarioBusiness.AddData(theData);
             }
             else

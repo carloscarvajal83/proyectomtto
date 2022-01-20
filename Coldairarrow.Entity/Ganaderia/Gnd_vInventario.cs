@@ -115,5 +115,10 @@ namespace Coldairarrow.Entity.Ganaderia
 
         public Boolean EsCompra { get; set; }
 
+        public String DescripcionCodigo { get; set; }
+
+        public String DescripcionPadre { get; set; }
+
+        public String CodigoBusqueda { get; set; }
     }
 }

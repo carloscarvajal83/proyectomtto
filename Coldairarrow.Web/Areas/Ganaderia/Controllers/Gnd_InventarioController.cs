@@ -70,17 +70,17 @@ namespace Coldairarrow.Web
             if(!String.IsNullOrEmpty(theData.ImagenBase64)) theData.ImagenUrl = imagenUrl + theData.ImagenNombre;
             if (!(theData.Id > 0))
             {
-                theData.IdUsuario = Operator.UserId;
+                theData.IdUsuario = Operator.Id;
                 theData.IdEstado = 1;
                 bool consecutivoExiste = _gnd_InventarioBusiness.ValidarConsecutivoExiste(theData);
                 int consecutivo = _gnd_InventarioBusiness.ObtenerSiguienteConsecutivo(theData);
                 if (consecutivoExiste) {
-                    return Error($"El consecutivo {theData.Codigo} ya existe, El proximo consecutivo disponible es el {consecutivo}");
+                    return Error($"El consecutivo {theData.Codigo} ya existe, El próximo consecutivo disponible es el {consecutivo}");
                 }
-                if(consecutivo != theData.Codigo)
+                /*if(consecutivo != theData.Codigo)
                 {
                     return Error("El proximo consecutivo debe ser el  " + consecutivo);
-                }
+                }*/
                 _gnd_InventarioBusiness.AddData(theData);
             }
             else
@@ -89,7 +89,7 @@ namespace Coldairarrow.Web
                 int consecutivo = _gnd_InventarioBusiness.ObtenerSiguienteConsecutivo(theData);
                 if (consecutivoExiste)
                 {
-                    return Error($"El consecutivo {theData.Codigo} ya existe, El proximo consecutivo disponible es el {consecutivo}");
+                    return Error($"El consecutivo {theData.Codigo} ya existe, El próximo consecutivo disponible es el {consecutivo}");
                 }
                 _gnd_InventarioBusiness.UpdateData(theData);
             }
@@ -110,7 +110,7 @@ namespace Coldairarrow.Web
 
         public ActionResult GetNextCode() {
             Gnd_Inventario theData = new Gnd_Inventario();
-            theData.IdUsuario = Operator.UserId;
+            theData.IdUsuario = Operator.Id;
             int consecutivo = _gnd_InventarioBusiness.ObtenerSiguienteConsecutivo(theData);
             return Content(consecutivo.ToString());
         }

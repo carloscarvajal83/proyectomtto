@@ -44,6 +44,19 @@ namespace Coldairarrow.Web
 
         #endregion
 
+        public ActionResult GetParentsDataList_NoPagin()
+        {
+            Pagination pagination = new Pagination
+            {
+                PageIndex = 1,
+                PageRows = int.MaxValue,
+                SortField = "Codigo"
+            };
+            var dataList = _gnd_vInventarioBusiness.GetParentDataList(null, null, pagination);
+
+            return Content(dataList.ToJson());
+        }
+
         #region 提交数据
 
         /// <summary>

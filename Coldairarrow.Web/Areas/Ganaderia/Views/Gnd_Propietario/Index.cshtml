@@ -68,10 +68,10 @@
             pageList: [10, 30, 60, 100],
             columns: [
                 { title: 'ck', field: 'ck', checkbox: true, width: '3%' },
-                { title: 'Descripcion', field: 'Descripcion', width: '60%' },
-                { title: 'IdUsuario', field: 'IdUsuario', width: '10%' },
+                { title: 'Descripcion', field: 'Descripcion', width: '30%' },
+                { title: 'IdUsuario', field: 'IdUsuario', width: '40%' },
                 {
-                    title: 'ACCIONES', field: '_', width: '20%', formatter: function (value, row) {
+                    title: 'ACCIONES', field: '_', width: '10%', formatter: function (value, row) {
                         var builder = new BtnBuilder();
                         builder.AddBtn({ icon: 'glyphicon-edit', function: 'openForm', param: [row['Id']] });
                         builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']] });

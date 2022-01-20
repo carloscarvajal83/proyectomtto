@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="form-group form-group-sm">
-            <label class="col-sm-2 control-label">Madre</label>
+            <label class="col-sm-2 control-label">Consecutivo Madre</label>
             <div class="col-sm-5">
                 <select id="parentList" class="selectpicker form-control" name="parentList" data-style="btn-default btn-sm" title="Select one"></select>
                 <div class="help-block with-errors"></div>
@@ -104,6 +104,16 @@
             <label class="col-sm-2 control-label">Es comprado?</label>
             <div class="col-sm-5">
                 <select id="buyedList" name="buyedList" class="selectpicker form-control" data-style="btn-default btn-sm">
+                    <option value="0" selected>No</option>
+                    <option value="1">Si</option>
+                </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Está Marcado?</label>
+            <div class="col-sm-5">
+                <select id="labeledList" name="labeledList" class="selectpicker form-control" data-style="btn-default btn-sm">
                     <option value="0" selected>No</option>
                     <option value="1">Si</option>
                 </select>
@@ -235,6 +245,12 @@
         });
     }
 
+    function initLabeledList(value) {
+        $('#labeledList').selectpicker({
+            value: value ? 1 : 0
+        });
+    }
+
     function createDateControl(name) {
         $('#' + name).datetimepicker({
             language: 'es',
@@ -244,11 +260,13 @@
 
     function initParentList() {
         $('#parentList').selectpicker({
-            url: '/Ganaderia/Gnd_Inventario/GetParentsDataList_NoPagin',
+            url: '/Ganaderia/Gnd_vInventario/GetParentsDataList_NoPagin',
             value: parentId,
             valueField: 'Id',
-            textField: 'Descripcion',
-            pleaseSelect: false
+            textField: 'DescripcionCodigo',
+            pleaseSelect: false,
+            sortName: 'Codigo',
+            sortOrder: 'desc'
         });
         $('#parentList').on('refreshed.bs.select', function (e) {
             // calls on data loaded
@@ -339,6 +357,7 @@
         getNexCode();
         initStatusList(theEntity.IdEstado);
         initBuyedList(theEntity.EsCompra);
+        initLabeledList(theEntity.Marcado);
         setStatusEvent(theEntity.IdEstado);
         setBuyedStatusEvent(theEntity.EsCompra);
         statusEvent();
@@ -360,6 +379,7 @@
                 theEntity['IdEstado'] = $('#statusList').val();
                 if ($("#parentList").val()) theEntity['IdPadre'] = $("#parentList").val();
                 theEntity['EsCompra'] = Number($('#buyedList').val()) == 1;
+                theEntity['Marcado'] = Number($('#labeledList').val()) == 1;
                 loading();
                 $.postJSON('/Ganaderia/Gnd_Inventario/SaveData', theEntity, function (resJson) {
                     loading(false);

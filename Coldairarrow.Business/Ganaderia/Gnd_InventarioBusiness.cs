@@ -1,3 +1,4 @@
+using Coldairarrow.Business.Common;
 using Coldairarrow.Entity.Ganaderia;
 using Coldairarrow.Util;
 using System;
@@ -24,7 +25,7 @@ namespace Coldairarrow.Business.Ganaderia
             //模糊查询
             if (!condition.IsNullOrEmpty() && !keyword.IsNullOrEmpty())
                 q = q.Where($@"{condition}.Contains(@0)", keyword);
-
+            q = q.Where(c => c.IdUsuario == Operator.Id);
             return q.GetPagination(pagination).ToList();
         }
 
@@ -34,7 +35,7 @@ namespace Coldairarrow.Business.Ganaderia
             var q = GetIQueryable();
 
             //模糊查询
-            q = q.Where(c => c.Sexo == 2 && c.EsPadre);
+            q = q.Where(c => c.Sexo == 2 && c.EsPadre && c.IdUsuario == Operator.Id);
 
             return q.GetPagination(pagination).ToList();
         }
@@ -103,7 +104,7 @@ namespace Coldairarrow.Business.Ganaderia
             var q = GetIQueryable();
             int? conteo = 0;
             conteo = q.Where(x => x.IdUsuario == theData.IdUsuario).Max(x => x.Codigo);
-            return conteo > 1 ? (int)conteo  + 1 : 1;
+            return conteo > 0 ? (int)conteo  + 1 : 1;
         }
 
         #endregion

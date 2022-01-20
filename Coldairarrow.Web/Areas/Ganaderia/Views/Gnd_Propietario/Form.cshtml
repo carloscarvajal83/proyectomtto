@@ -17,13 +17,6 @@
                 <div class="help-block with-errors"></div>
             </div>
         </div>
-        <div class="form-group form-group-sm">
-            <label class="col-sm-2 control-label">IdUsuario</label>
-            <div class="col-sm-5">
-                <input name="IdUsuario" value="@obj.IdUsuario" type="text" class="form-control" required>
-                <div class="help-block with-errors"></div>
-            </div>
-        </div>
         <div class="form-group">
             <button id="submit" type="submit" class="hidden">提交</button>
         </div>
@@ -43,9 +36,8 @@
             //校验成功
             if (!e.isDefaultPrevented()) {
                 e.preventDefault();
-
                 var values = $('#form').getValues();
-                
+
                 $.extend(theEntity, values);
                 loading();
                 $.postJSON('/Ganaderia/Gnd_Propietario/SaveData', theEntity, function (resJson) {
