@@ -36,7 +36,19 @@
                     BUSCAR
                 </button>
             </div>
-        </form>
+            <div class="form-group" style="float:right; margin-right:0px;">
+                <div class="col-auto">
+                    <button id="reportBtn" name="reportBtn" type="button" class="btn btn-default btn-sm">
+                        <i class="glyphicon glyphicon-print"></i>
+                    </button>
+                    <select class="selectpicker" id="reportSelect" name="reportSelect" data-style="btn-default btn-sm" data-width="100px">
+                        <option value="">Reporte</option>
+                        <option value="1">General</option>
+                        <option value="2">Propietario</option>
+                    </select>
+                </div>
+            </div>
+</form>
     </div>
     <div class="fx-wrapper">
         <table id="dataTable" class="table-bordered"></table>
@@ -98,7 +110,20 @@
 
     //绑定事件
     function bindEvent() {
-
+        $("#reportBtn").click(function () {
+            // console.log($(this).children(":selected").val());
+            let idReport = Number($("#reportSelect option:selected").val());
+            switch (idReport) {
+                case 1:
+                    alert("Reporte General");
+                    break;
+                case 2:
+                    openFormReportOwner();
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     //打开表单
@@ -109,6 +134,19 @@
             btn: ['Ok', 'Cancel'],
             height:'100%',
             url: '/Ganaderia/Gnd_Inventario/Form?id={0}'.format(id || ''),
+            yes: function (window, body) {
+                window.submitForm();
+            }
+        });
+    }
+
+    function openFormReportOwner() {
+        dialogOpen({
+            id: 'form',
+            title: 'Reporte Propietario',
+            btn: ['Ok', 'Cancel'],
+            height: '50%',
+            url: '/Ganaderia/Gnd_Propietario/FormOwnerReport?id={0}'.format(0 || ''),
             yes: function (window, body) {
                 window.submitForm();
             }

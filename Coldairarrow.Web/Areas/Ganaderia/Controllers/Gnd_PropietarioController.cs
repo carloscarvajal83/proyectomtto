@@ -26,6 +26,12 @@ namespace Coldairarrow.Web
             return View(theData);
         }
 
+        public ActionResult FormOwnerReport(string id)
+        {
+            var theData = id.IsNullOrEmpty() ? new Gnd_Propietario() : _gnd_PropietarioBusiness.GetTheData(id);
+
+            return View(theData);
+        }
         #endregion
 
         #region 获取数据

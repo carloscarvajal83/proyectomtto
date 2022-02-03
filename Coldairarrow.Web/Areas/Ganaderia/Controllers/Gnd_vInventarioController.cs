@@ -88,6 +88,11 @@ namespace Coldairarrow.Web
             return Success("删除成功！");
         }
 
+        public ActionResult VerReporte(Gnd_Propietario theData)
+        {
+            return Json(new { success = true, fileName = "" });
+        }
+
         #endregion
     }
 }

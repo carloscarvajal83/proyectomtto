@@ -101,24 +101,55 @@ namespace Coldairarrow.Entity.Ganaderia
         /// </summary>
         public String Padre { get; set; }
 
-        public Int32? Codigo { get; set; }
+        /// <summary>
+        /// Codigo
+        /// </summary>
+        public Int32 Codigo { get; set; }
 
+        /// <summary>
+        /// Marcado
+        /// </summary>
         public Boolean Marcado { get; set; }
 
+        /// <summary>
+        /// FechaVenta
+        /// </summary>
         public DateTime? FechaVenta { get; set; }
 
+        /// <summary>
+        /// FechaDeceso
+        /// </summary>
         public DateTime? FechaDeceso { get; set; }
 
+        /// <summary>
+        /// FechaCompra
+        /// </summary>
         public DateTime? FechaCompra { get; set; }
 
+        /// <summary>
+        /// FechaPerdida
+        /// </summary>
         public DateTime? FechaPerdida { get; set; }
 
+        /// <summary>
+        /// EsCompra
+        /// </summary>
         public Boolean EsCompra { get; set; }
 
+        /// <summary>
+        /// DescripcionCodigo
+        /// </summary>
         public String DescripcionCodigo { get; set; }
 
+        /// <summary>
+        /// DescripcionPadre
+        /// </summary>
         public String DescripcionPadre { get; set; }
 
+        /// <summary>
+        /// CodigoBusqueda
+        /// </summary>
         public String CodigoBusqueda { get; set; }
+
     }
 }
