@@ -175,8 +175,10 @@ namespace Coldairarrow.Web
                 worksheet.Row(1).Height = 25;
                 worksheet.Cells[1, 1].Value = "REPORTE ESTADO FAMILIA HERRAMIENTAS";
                 worksheet.Cells[2, 1].Value = "[" + strItemNo + "] " + Familia.ToUpper();
-                worksheet.Cells[3, 1].Value = "SERIAL";
-                worksheet.Column(1).Width = 12.78;
+                worksheet.Cells[3, 1].Value = "NOMBRE";
+                worksheet.Cells[3, 2].Value = "SERIAL";
+                worksheet.Column(1).Width = 25;
+                worksheet.Column(2).Width = 15;
 
                 List<IEstado> iEstados = new List<IEstado>();
                 iEstados.Add(new IEstado { IdEstado = 1, strEstado = "OK", iColor= Color.FromArgb(255, 0, 255, 0) });
@@ -185,7 +187,7 @@ namespace Coldairarrow.Web
                 // Fila inicio Controles
                 int irow = 3;
                 // Columna Inicio controles
-                int icol = 0;
+                int icol = 1;
                 foreach (var icontrol1 in listadoControles)
                 {
                     icol = icol + 2;
@@ -196,8 +198,8 @@ namespace Coldairarrow.Web
                     worksheet.Cells[irow + 1, icol + 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     PosicionControles.Add(icontrol1.IdControl, icol);
 
-                    worksheet.Column(icol).Width = 17.78;
-                    worksheet.Column(icol + 1).Width = 17.78;
+                    worksheet.Column(icol).Width = 24;
+                    worksheet.Column(icol + 1).Width = 24;
                     worksheet.Cells[irow, icol, irow, icol + 1].Merge = true;
                     worksheet.Cells[irow, icol, irow, icol + 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
 
@@ -212,8 +214,13 @@ namespace Coldairarrow.Web
                 worksheet.Cells[1, 1, irow, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 worksheet.Cells[1, 1, irow, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
+                worksheet.Cells[irow, 2, irow + 1, 2].Merge = true;
+                worksheet.Cells[2, 2, irow, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[2, 2, irow, 2].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
                 //Rellena Encabezado Serial
                 worksheet.Cells["A3:A4"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells["B3:B4"].Style.Border.BorderAround(ExcelBorderStyle.Thin);
 
                 //Centra toda
                 worksheet.Cells[irow, 1, irow + 1, icol + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -230,7 +237,8 @@ namespace Coldairarrow.Web
                     {
                         wrow = irow;
                         PosicionHerramientas.Add(itool.Serial, irow);
-                        worksheet.Cells[wrow, 1].Value = itool.Serial.ToUpper();
+                        worksheet.Cells[wrow, 1].Value = itool.Herramienta.ToUpper();
+                        worksheet.Cells[wrow, 2].Value = itool.Serial.ToUpper();
                         irow++;
                     }
                     else {
@@ -339,19 +347,25 @@ namespace Coldairarrow.Web
                 wrow = irow;
 
                 worksheet.Cells[wrow + 1, 1].Value = "OK";
+                worksheet.Cells[wrow + 1, 1, wrow + 1, 2].Merge = true;
+                worksheet.Cells[wrow + 1, 1, wrow + 1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells[wrow + 1, 1].Style.Font.Bold = true;
-                worksheet.Cells[wrow + 1, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[wrow + 1, 1].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+                worksheet.Cells[wrow + 1, 1, wrow + 1, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[wrow + 1, 1, wrow + 1, 2].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
 
                 worksheet.Cells[wrow + 2, 1].Value = "ALERTA";
+                worksheet.Cells[wrow + 2, 1, wrow + 2, 2].Merge = true;
+                worksheet.Cells[wrow + 2, 1, wrow + 2, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells[wrow + 2, 1].Style.Font.Bold = true;
-                worksheet.Cells[wrow + 2, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[wrow + 2, 1].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+                worksheet.Cells[wrow + 2, 1, wrow + 2, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[wrow + 2, 1, wrow + 2, 2].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
 
                 worksheet.Cells[wrow + 3, 1].Value = "VENCIDA";
+                worksheet.Cells[wrow + 3, 1, wrow + 3, 2].Merge = true;
+                worksheet.Cells[wrow + 3, 1, wrow + 3, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells[wrow + 3, 1].Style.Font.Bold = true;
-                worksheet.Cells[wrow + 3, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[wrow + 3, 1].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+                worksheet.Cells[wrow + 3, 1, wrow + 3, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[wrow + 3, 1, wrow + 3, 2].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
 
                 foreach (var icontrol in listadoControles)
                 {
@@ -378,19 +392,25 @@ namespace Coldairarrow.Web
                 wrow = wrow + 5;
 
                 worksheet.Cells[wrow + 1, 1].Value = "OK";
+                worksheet.Cells[wrow + 1, 1, wrow + 1, 2].Merge = true;
+                worksheet.Cells[wrow + 1, 1, wrow + 1, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells[wrow + 1, 1].Style.Font.Bold = true;
-                worksheet.Cells[wrow + 1, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[wrow + 1, 1].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+                worksheet.Cells[wrow + 1, 1, wrow + 1, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[wrow + 1, 1, wrow + 1, 2].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
 
                 worksheet.Cells[wrow + 2, 1].Value = "ALERTA";
+                worksheet.Cells[wrow + 2, 1, wrow + 2, 2].Merge = true;
+                worksheet.Cells[wrow + 2, 1, wrow + 2, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells[wrow + 2, 1].Style.Font.Bold = true;
-                worksheet.Cells[wrow + 2, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[wrow + 2, 1].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+                worksheet.Cells[wrow + 2, 1, wrow + 2, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[wrow + 2, 1, wrow + 2, 2].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
 
                 worksheet.Cells[wrow + 3, 1].Value = "VENCIDA";
+                worksheet.Cells[wrow + 3, 1, wrow + 3, 2].Merge = true;
+                worksheet.Cells[wrow + 3, 1, wrow + 3, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
                 worksheet.Cells[wrow + 3, 1].Style.Font.Bold = true;
-                worksheet.Cells[wrow + 3, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[wrow + 3, 1].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+                worksheet.Cells[wrow + 3, 1, wrow + 3, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[wrow + 3, 1, wrow + 3, 2].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
 
                 foreach (var icontrol in listadoControles)
                 {
@@ -422,11 +442,11 @@ namespace Coldairarrow.Web
                     lineChart.Title.Text = "ESTADO " + Familia.ToUpper();
 
                     //Define el label de datos para cada rango de datos
-                    ExcelRange rangeLabel = worksheet.Cells[wrow, 2, wrow, icol + 1];
+                    ExcelRange rangeLabel = worksheet.Cells[wrow, 3, wrow, icol + 1];
                     var iserie = 1;
                     foreach (var icontrol in iEstados)
                     {
-                        var range = worksheet.Cells[wrow + iserie, 2, wrow + iserie, icol + 1];
+                        var range = worksheet.Cells[wrow + iserie, 3, wrow + iserie, icol + 1];
                         lineChart.Series.Add(range, rangeLabel);
                         lineChart.Series[iserie - 1].Header = worksheet.Cells[wrow + iserie, 1].Value.ToString();
                         lineChart.Series[iserie - 1].Fill.Style = eFillStyle.SolidFill;
@@ -436,7 +456,7 @@ namespace Coldairarrow.Web
 
                     lineChart.DataLabel.ShowValue = true;
 
-                    lineChart.SetSize(2 * listadoControles.Count() * 125 + 120, 560);
+                    lineChart.SetSize(2 * listadoControles.Count() * 180 + 120, 560);
                     lineChart.SetPosition(wrow + 5, 1, 1, 0);
                 }
 

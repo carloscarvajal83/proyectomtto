@@ -36,24 +36,43 @@
         </div>
 
         <!--
-        <div class="form-group form-group-sm">
-            <label class="col-sm-2 control-label">Clase H.</label>
-            <div class="col-sm-5">
-                <select id="claseHList" class="selectpicker form-control" name="claseHList" data-style="btn-default btn-sm" required title="Seleccione una clase"></select>
-                <div class="help-block with-errors"></div>
-            </div>
+    <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label">Clase H.</label>
+        <div class="col-sm-5">
+            <select id="claseHList" class="selectpicker form-control" name="claseHList" data-style="btn-default btn-sm" required title="Seleccione una clase"></select>
+            <div class="help-block with-errors"></div>
         </div>
-        -->
+    </div>
+    -->
         <!--
-        <div class="form-group form-group-sm">
-            <label class="col-sm-2 control-label">Ubicacion</label>
-            <div class="col-sm-5">
-                <select id="plantHList" class="selectpicker form-control" name="plantHList" data-style="btn-default btn-sm" required title="Seleccione una base"></select>
-                <div class="help-block with-errors"></div>
-            </div>
+    <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label">Ubicacion</label>
+        <div class="col-sm-5">
+            <select id="plantHList" class="selectpicker form-control" name="plantHList" data-style="btn-default btn-sm" required title="Seleccione una base"></select>
+            <div class="help-block with-errors"></div>
         </div>
-        -->
+    </div>
+    -->
         <!--
+    <div class="form-group form-group-sm">
+        <label class="col-sm-2 control-label">Estado</label>
+        <div class="col-sm-5">
+            <select id="Estado" name="Estado" class="selectpicker form-control" data-style="btn-default btn-sm">
+                <option value="0">Inactivo</option>
+                <option value="1">Activo</option>
+            </select>
+            <div class="help-block with-errors"></div>
+        </div>
+    </div>
+    -->
+        <!--
+    <div class="form-group form-group-sm" id="container" style="position:relative">
+        <label class="col-sm-2 control-label">Adquisicion</label>
+        <div class="col-sm-5" style="position:relative">
+            <input id="FechaAdquisicion" name="FechaAdquisicion" type="text" value="@(obj.FechaAdquisicion?.ToString("yyyy-MM-dd"))" data-date-format="yyyy-mm-dd" class="form-control">
+        </div>
+    </div>
+    -->
         <div class="form-group form-group-sm">
             <label class="col-sm-2 control-label">Estado</label>
             <div class="col-sm-5">
@@ -64,16 +83,6 @@
                 <div class="help-block with-errors"></div>
             </div>
         </div>
-        -->
-        <!--
-        <div class="form-group form-group-sm" id="container" style="position:relative">
-            <label class="col-sm-2 control-label">Adquisicion</label>
-            <div class="col-sm-5" style="position:relative">
-                <input id="FechaAdquisicion" name="FechaAdquisicion" type="text" value="@(obj.FechaAdquisicion?.ToString("yyyy-MM-dd"))" data-date-format="yyyy-mm-dd" class="form-control">
-            </div>
-        </div>
-        -->
-
         <div class="form-group">
             <button id="submit" type="submit" class="hidden">提交</button>
         </div>
@@ -91,10 +100,11 @@
 
     //事件绑定
     function initEvent() {
-        /*
+        
         $('#Estado').selectpicker({
             value: theEntity.Estado
         });
+        /*
         $('#FechaAdquisicion').datetimepicker({
             language: 'es',
             minView: 2//日期选择
@@ -158,7 +168,7 @@
                 //theEntity['IdUbicacion'] = $('#plantHList').val();
                 theEntity['IdClaseHerramienta'] = 1;
                 theEntity['IdUbicacion'] = 1;
-                theEntity['Estado'] = 1;
+                theEntity['Estado'] = $('#Estado').val();
                 theEntity['FechaAdquisicion'] = "2018-01-01";
 
                 loading();
