@@ -20,6 +20,7 @@ namespace Coldairarrow.Web
     {
         Wtf_HerramientasBusiness _wtf_HerramientasBusiness = new Wtf_HerramientasBusiness();
         Wtf_vReporteControlesHerramientaBusiness _wtf_vReporteControlesHerramientaBusiness = new Wtf_vReporteControlesHerramientaBusiness();
+        Wtf_vHerramientasBusiness _wtf_VHerramientasBusiness = new Wtf_vHerramientasBusiness();
 
         private readonly IHostingEnvironment _env;
 
@@ -207,7 +208,81 @@ namespace Coldairarrow.Web
             return Json(new { fileName= NombreArchivo, type = contentType, ruta = Directorio });
         }
 
+        public ActionResult VerReporteGeneral()
+        {
+            Pagination pagination = new Pagination
+            {
+                PageIndex = 1,
+                PageRows = int.MaxValue
+            };
+            var listado = _wtf_VHerramientasBusiness.GetDataList(null, null, pagination);
+            string Serial = "NA";
+            if (listado.Count > 0)
+            {
+                Serial = listado[0].Serial;
+            }
 
-        #endregion
-    }
+            var FechaHoy = DateTime.Now;
+            string strYear = FechaHoy.ToString("yyyy");
+            string strMes = FechaHoy.ToString("MM");
+            string strDia = FechaHoy.ToString("dd");
+            string NombreArchivo = "GeneralToolsReport_" + Serial + "_" + strYear + strMes + strDia + ".xlsx";
+            string Directorio = "ExportFiles/";
+            var serverPath = Path.Combine(_env.WebRootPath, Directorio);
+            DirectoryInfo outputDir = new DirectoryInfo(serverPath);
+            FileInfo newfile = new FileInfo(outputDir.FullName + NombreArchivo);
+            if (newfile.Exists)
+            {
+                newfile.Delete();
+                newfile = new FileInfo(outputDir.FullName + NombreArchivo);
+            }
+
+            using (var package = new ExcelPackage(newfile))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Report");
+                worksheet.Row(1).Height = 30;
+                worksheet.Row(2).Height = 30;
+                worksheet.Cells[1, 1].Value = "REPORTE GENERAL DE HERRAMIENTAS";
+                worksheet.Cells[2, 1].Value = "NOMBRE";
+                worksheet.Cells[2, 2].Value = "SERIAL";
+                worksheet.Cells[2, 3].Value = "FAMILIA";
+                worksheet.Cells[2, 4].Value = "ESTADO";
+                worksheet.Cells[2, 5].Value = "OBSERVACION ESTADO";
+
+                worksheet.Column(1).Width = 30.78;
+                worksheet.Column(2).Width = 15.78;
+                worksheet.Column(3).Width = 30.78;
+                worksheet.Column(4).Width = 15.78;
+                worksheet.Column(5).Width = 45.78;
+
+                worksheet.Cells[1, 1, 2, 5].Style.Font.Bold = true;
+                worksheet.Cells[1, 1, 2, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[1, 1, 2, 5].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                worksheet.Cells[1, 1, 1, 5].Merge = true;
+                worksheet.Cells[2, 1, 2, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[2, 1, 2, 5].Style.Fill.BackgroundColor.SetColor(255, 191, 191, 191);
+                worksheet.Cells[1, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells[2, 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells[2, 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells[2, 3].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells[2, 4].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                worksheet.Cells[2, 5].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                int ffila = 2;
+                foreach (var item in listado) {
+                    ffila++;
+                    worksheet.Cells[ffila, 1].Value = item.Descripcion.ToUpper();
+                    worksheet.Cells[ffila, 2].Value = item.Serial.ToUpper();
+                    worksheet.Cells[ffila, 3].Value = item.TipoHerramienta.ToUpper();
+                    worksheet.Cells[ffila, 4].Value = item.Estado == 1 ? "Operativo" : "No Operativo";
+                    worksheet.Cells[ffila, 5].Value = item.EstadoNoOperativo?.ToUpper();
+
+                }
+                package.Save();
+            }
+            var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            return Json(new { fileName = NombreArchivo, type = contentType, ruta = Directorio });
+        }
+            #endregion
+        }
 }

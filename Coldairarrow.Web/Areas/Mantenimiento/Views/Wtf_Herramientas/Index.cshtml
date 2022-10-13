@@ -38,6 +38,9 @@
                     <i class="glyphicon glyphicon-search"></i>
                     SEARCH
                 </button>
+                <button type="button" class="btn btn-default btn-sm" title="Reporte General" onclick="javascript: loadGeneralReport();">
+                    <i class="glyphicon glyphicon-print"></i>
+                </button>
             </div>
         </form>
     </div>
@@ -138,6 +141,19 @@
                 window.location = raiz + data.ruta + data.fileName;
             }
         }); 
+    }
+
+    function loadGeneralReport() {
+        $.ajax({
+            url: '/Mantenimiento/Wtf_Herramientas/VerReporteGeneral',
+            contentType: 'application/json; charset=utf-8',
+            datatype: 'json',
+            type: "GET",
+            success: function (data) {
+                //alert("sucess");
+                window.location = raiz + data.ruta + data.fileName;
+            }
+        });
     }
 
     //删除数据
