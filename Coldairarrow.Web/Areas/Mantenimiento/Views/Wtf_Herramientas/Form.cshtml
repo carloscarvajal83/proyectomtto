@@ -77,9 +77,16 @@
             <label class="col-sm-2 control-label">Estado</label>
             <div class="col-sm-5">
                 <select id="Estado" name="Estado" class="selectpicker form-control" data-style="btn-default btn-sm">
-                    <option value="0">Inactivo</option>
-                    <option value="1">Activo</option>
+                    <option value="1" selected>Operativo</option>
+                    <option value="0">No Operativo</option>
                 </select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Observación No Operativo</label>
+            <div class="col-sm-5">
+                <input id="EstadoNoOperativo" name="EstadoNoOperativo" value="@obj.EstadoNoOperativo" type="text" class="form-control" required>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
@@ -91,6 +98,9 @@
 <script>
     var theEntity = @objStr;
     var typeId = @obj.IdTipoHerramienta;
+    var statusId = @obj.Estado;
+    var objId = @obj.Id;
+    var noOpDesc;
     //var classId = @obj.IdClaseHerramienta;
     //var baseId = @obj.IdUbicacion;
 
@@ -100,10 +110,18 @@
 
     //事件绑定
     function initEvent() {
-        
+        statusId = objId > 0 ? theEntity.Estado : 1;
+        noOpDesc = theEntity.EstadoNoOperativo == null ? "" : theEntity.EstadoNoOperativo;
         $('#Estado').selectpicker({
-            value: theEntity.Estado
+            value: statusId
         });
+        const showDesc = validateHideShowStatusDescription(statusId);
+        $('#Estado').on('changed.bs.select', function (e) {
+            // calls on data changed
+            console.log('Cambia estado', this.value);
+            validateHideShowStatusDescription(this.value);
+        });
+
         /*
         $('#FechaAdquisicion').datetimepicker({
             language: 'es',
@@ -186,6 +204,22 @@
                 });
             }
         })
+    }
+
+    function validateHideShowStatusDescription(status) {
+        const _status = parseInt(status);
+        let result = false;
+        if (_status > 0) {
+            $("#EstadoNoOperativo").parent().parent().hide();
+            $('#EstadoNoOperativo').removeAttr('required');
+            $('#EstadoNoOperativo').val("");
+            result = true;
+        } else {
+            $("#EstadoNoOperativo").parent().parent().show();
+            $("#EstadoNoOperativo").prop("required", true);
+            $('#EstadoNoOperativo').val(noOpDesc);
+        }
+        return result;
     }
 
     //提交表单

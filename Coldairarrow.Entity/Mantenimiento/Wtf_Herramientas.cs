@@ -57,5 +57,7 @@ namespace Coldairarrow.Entity.Mantenimiento
         /// </summary>
         public DateTime? FechaAdquisicion { get; set; }
 
+        public string EstadoNoOperativo { get; set; }
+
     }
 }
