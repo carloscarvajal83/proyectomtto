@@ -282,14 +282,17 @@ namespace Coldairarrow.Web
 
                         switch (itool.Estado)
                         {
+                            // Estado Vigente
                             case 1:
                                 worksheet.Cells[wrow, wcol, wrow, wcol + 1].Style.Fill.BackgroundColor.SetColor(255, 0, 255, 0);
                                 registroEstadistica.StatusQty++;
                                 break;
+                            // Estado Alerta
                             case 2:
                                 worksheet.Cells[wrow, wcol, wrow, wcol + 1].Style.Fill.BackgroundColor.SetColor(255, 255, 192, 0);
                                 registroEstadistica.StatusQty++;
                                 break;
+                            // Estado Vencido
                             case 3:
                                 worksheet.Cells[wrow, wcol, wrow, wcol + 1].Style.Fill.BackgroundColor.SetColor(255, 255, 0, 0);
                                 registroEstadistica.StatusQty++;

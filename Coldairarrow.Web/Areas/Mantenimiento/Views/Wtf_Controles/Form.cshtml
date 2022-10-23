@@ -18,6 +18,13 @@
             </div>
         </div>
         <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Sin Caducidad</label>
+            <div class="col-sm-1">
+                <input name="Caducidad" id="Caducidad" style="width:18px; height:18px;" value="false" type="checkbox" class="">
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+        <div class="form-group form-group-sm">
             <label class="col-sm-2 control-label">Periodicidad</label>
             <div class="col-sm-5">
                 <input name="Periodicidad" id="Periodicidad" value="@obj.Periodicidad" type="number" min="2" max="60" class="form-control" required>
@@ -46,6 +53,17 @@
     //事件绑定
     function initEvent() {
         //表单校验
+
+        const periodicidad = parseInt($('#Periodicidad').val());
+        const caducidad = periodicidad > 0;
+        evaluarCaducidad(!caducidad);
+        $("#Caducidad").prop('checked', !caducidad);
+
+        $('#Caducidad').change(function (event) {
+            const isChecked = $(this).is(":checked");
+            evaluarCaducidad(isChecked);
+        });
+
         $('#form').validator().on('submit', function (e) {
             //校验成功
             if (!e.isDefaultPrevented()) {
@@ -54,7 +72,12 @@
                 var Periodicidad = parseInt($('#Periodicidad').val());
                 var Preaviso = parseInt($('#Preaviso').val());
 
-                if (Periodicidad - Preaviso < 1) {
+                const no_caduca = $("#Caducidad").is(":checked");
+                if (no_caduca) {
+                    $('#Periodicidad').val('0');
+                    $('#Preaviso').val('0');
+                }
+                else if (Periodicidad - Preaviso < 1) {
                     dialogError("La periodicidad debe ser mayor que el tiempo de preaviso");
                     return;
                 }
@@ -77,6 +100,18 @@
                 });
             }
         })
+    }
+
+    const evaluarCaducidad = function (value) {
+        if (value) {
+            $('#Periodicidad').val('0');
+            $('#Periodicidad').attr('disabled', 'disabled');
+            $('#Preaviso').val('0');
+            $('#Preaviso').attr('disabled', 'disabled');
+        } else {
+            $('#Periodicidad').removeAttr('disabled');
+            $('#Preaviso').removeAttr('disabled');
+        }
     }
 
     //提交表单
