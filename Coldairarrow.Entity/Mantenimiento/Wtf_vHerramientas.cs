@@ -78,5 +78,11 @@ namespace Coldairarrow.Entity.Mantenimiento
 
         public string EstadoNoOperativo { get; set; }
 
+        // Es posible que estos campos no estén en todas las vistas
+        public DateTime? FechaControl1 { get; set; }
+
+        // Es posible que estos campos no estén en todas las vistas
+        public DateTime? FechaControl2 { get; set; }
+
     }
 }

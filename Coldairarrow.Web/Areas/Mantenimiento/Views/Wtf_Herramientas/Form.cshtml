@@ -44,15 +44,15 @@
         </div>
     </div>
     -->
-        <!--
+        
     <div class="form-group form-group-sm">
-        <label class="col-sm-2 control-label">Ubicacion</label>
+        <label class="col-sm-2 control-label">Location</label>
         <div class="col-sm-5">
-            <select id="plantHList" class="selectpicker form-control" name="plantHList" data-style="btn-default btn-sm" required title="Seleccione una base"></select>
+            <select id="plantHList" class="selectpicker form-control" name="plantHList" data-style="btn-default btn-sm" required title="Select one"></select>
             <div class="help-block with-errors"></div>
         </div>
     </div>
-    -->
+    
         <!--
     <div class="form-group form-group-sm">
         <label class="col-sm-2 control-label">Estado</label>
@@ -102,7 +102,7 @@
     var objId = @obj.Id;
     var noOpDesc;
     //var classId = @obj.IdClaseHerramienta;
-    //var baseId = @obj.IdUbicacion;
+    var baseId = @obj.IdUbicacion;
 
     $(function () {
         initEvent();
@@ -156,6 +156,7 @@
                 $(this).selectpicker('val', classId);
             }
         });
+        */
 
         $('#plantHList').selectpicker({
             url: '/Mantenimiento/Wtf_Ubicaciones/GetDataList_NoPagin',
@@ -170,7 +171,6 @@
                 $(this).selectpicker('val', baseId);
             }
         });
-        */
 
         //表单校验
         $('#form').validator().on('submit', function (e) {
@@ -183,9 +183,9 @@
 
                 theEntity['IdTipoHerramienta'] = $('#tipoHList').val();
                 //theEntity['IdClaseHerramienta'] = $('#claseHList').val();
-                //theEntity['IdUbicacion'] = $('#plantHList').val();
+                theEntity['IdUbicacion'] = $('#plantHList').val();
                 theEntity['IdClaseHerramienta'] = 1;
-                theEntity['IdUbicacion'] = 1;
+                //theEntity['IdUbicacion'] = 1;
                 theEntity['Estado'] = $('#Estado').val();
                 theEntity['FechaAdquisicion'] = "2018-01-01";
 
