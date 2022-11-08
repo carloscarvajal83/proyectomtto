@@ -216,17 +216,19 @@ namespace Coldairarrow.Web
                 PageRows = int.MaxValue
             };
             var listado = _wtf_VHerramientasBusiness.GetDataList(null, null, pagination);
-            string Serial = "NA";
+            string Control1 = "-";
+            string Control2 = "-";
             if (listado.Count > 0)
             {
-                Serial = listado[0].Serial;
+                Control1 = listado[0].Control1;
+                Control2 = listado[0].Control2;
             }
 
             var FechaHoy = DateTime.Now;
             string strYear = FechaHoy.ToString("yyyy");
             string strMes = FechaHoy.ToString("MM");
             string strDia = FechaHoy.ToString("dd");
-            string NombreArchivo = "GeneralToolsReport_" + Serial + "_" + strYear + strMes + strDia + ".xlsx";
+            string NombreArchivo = "GeneralToolsReport_" + strYear + strMes + strDia + ".xlsx";
             string Directorio = "ExportFiles/";
             var serverPath = Path.Combine(_env.WebRootPath, Directorio);
             DirectoryInfo outputDir = new DirectoryInfo(serverPath);
@@ -249,8 +251,8 @@ namespace Coldairarrow.Web
                 worksheet.Cells[2, 4].Value = "UBICACION";
                 worksheet.Cells[2, 5].Value = "ESTADO";
                 worksheet.Cells[2, 6].Value = "OBSERVACION ESTADO";
-                worksheet.Cells[2, 7].Value = "INSP. NTD";
-                worksheet.Cells[2, 8].Value = "MTTO (MS)";
+                worksheet.Cells[2, 7].Value = Control1;
+                worksheet.Cells[2, 8].Value = Control2;
 
                 worksheet.Column(1).Width = 30.78;
                 worksheet.Column(2).Width = 15.78;
@@ -286,9 +288,38 @@ namespace Coldairarrow.Web
                     worksheet.Cells[ffila, 5].Value = item.Estado == 1 ? "Operativo" : "No Operativo";
                     worksheet.Cells[ffila, 6].Value = item.EstadoNoOperativo?.ToUpper();
                     worksheet.Cells[ffila, 7].Style.Numberformat.Format = "dd-mmm-yyyy";
-                    worksheet.Cells[ffila, 7].Value = item.FechaControl1;
+                    worksheet.Cells[ffila, 7].Value = item.ProximaInspecion1;
+                    worksheet.Cells[ffila, 7, ffila, 8].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[ffila, 8].Style.Numberformat.Format = "dd-mmm-yyyy";
-                    worksheet.Cells[ffila, 8].Value = item.FechaControl2;
+                    worksheet.Cells[ffila, 8].Value = item.ProximaInspecion2;
+                    switch (item.EstadoControl1)
+                    {
+                        case 1:
+                            worksheet.Cells[ffila, 7].Style.Fill.BackgroundColor.SetColor(255, 0, 255, 0);
+                            break;
+                        case 2:
+                            worksheet.Cells[ffila, 7].Style.Fill.BackgroundColor.SetColor(255, 255, 192, 0);
+                            break;
+                        case 3:
+                            worksheet.Cells[ffila, 7].Style.Fill.BackgroundColor.SetColor(255, 255, 0, 0);
+                            break;
+                        default:
+                            break;
+                    }
+                    switch (item.EstadoControl2)
+                    {
+                        case 1:
+                            worksheet.Cells[ffila, 8].Style.Fill.BackgroundColor.SetColor(255, 0, 255, 0);
+                            break;
+                        case 2:
+                            worksheet.Cells[ffila, 8].Style.Fill.BackgroundColor.SetColor(255, 255, 192, 0);
+                            break;
+                        case 3:
+                            worksheet.Cells[ffila, 8].Style.Fill.BackgroundColor.SetColor(255, 255, 0, 0);
+                            break;
+                        default:
+                            break;
+                    }
 
                 }
                 package.Save();

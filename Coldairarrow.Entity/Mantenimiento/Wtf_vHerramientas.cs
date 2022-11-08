@@ -84,5 +84,16 @@ namespace Coldairarrow.Entity.Mantenimiento
         // Es posible que estos campos no estén en todas las vistas
         public DateTime? FechaControl2 { get; set; }
 
+        public string Control1 { get; set; }
+        
+        public string Control2 { get; set; }
+
+        public Int32 EstadoControl1 { get; set; }
+        
+        public Int32 EstadoControl2 { get; set; }
+
+        public DateTime? ProximaInspecion1 { get; set; }
+
+        public DateTime? ProximaInspecion2 { get; set; }
     }
 }

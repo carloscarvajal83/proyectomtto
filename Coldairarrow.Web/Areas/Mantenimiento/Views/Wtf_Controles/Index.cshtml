@@ -1,18 +1,23 @@
+@using Coldairarrow.Business.Base_SysManage;
 @{
     Layout = "~/Views/Shared/_Layout_List.cshtml";
+    var userManage = PermissionManage.OperatorHasPermissionValue("sysuser.manage");
 }
 
 <div class="fx-content">
     <div id="toobar">
         <div class="btn-group btn-group-sm">
-            <button onclick="openForm('', 'NUEVO CONTROL');" type="button" class="btn btn-default" aria-label="Left Align">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                NEW
-            </button>
-            <button onclick="deleteData();" type="button" class="btn btn-default" aria-label="Right Align">
-                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                DELETE
-            </button>
+            @if (userManage)
+            {
+                <button onclick="openForm('', 'NUEVO CONTROL');" type="button" class="btn btn-default" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    NEW
+                </button>
+                <button onclick="deleteData();" type="button" class="btn btn-default" aria-label="Right Align">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    DELETE
+                </button>
+            }
             <button type="button" class="btn btn-default" aria-label="Right Align" onclick="javascript: location.reload();">
                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                 REFRESH
@@ -45,6 +50,7 @@
 
 <script>
     var $table = $('#dataTable');
+    var userManage =@userManage.ToString().ToLower();
 
     $(function () {
         initTable();
@@ -72,9 +78,10 @@
                 {
                     title: 'ACCIONES', field: '_', width: '40%', formatter: function (value, row) {
                         var builder = new BtnBuilder();
-                        builder.AddBtn({ icon: 'glyphicon-edit', function: 'openForm', param: [row['Id'], 'EDITAR CONTROL'] });
-                        builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']] });
-
+                        if (userManage) {
+                            builder.AddBtn({ icon: 'glyphicon-edit', function: 'openForm', param: [row['Id'], 'EDITAR CONTROL'] });
+                            builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']] });
+                        }
                         return builder.build();
                     }
                 }

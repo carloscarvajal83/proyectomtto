@@ -1,18 +1,23 @@
 @using Coldairarrow.Util;
+@using Coldairarrow.Business.Base_SysManage;
 @{
     Layout = "~/Views/Shared/_Layout_List.cshtml";
+    var userManage = PermissionManage.OperatorHasPermissionValue("sysuser.manage");
 }
 <div class="fx-content">
     <div id="toobar">
         <div class="btn-group btn-group-sm">
-            <button onclick="openForm('', 'NEW GROUP');" type="button" class="btn btn-default" aria-label="Left Align">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                NEW
-            </button>
-            <button onclick="deleteData();" type="button" class="btn btn-default" aria-label="Right Align">
-                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                DELETE
-            </button>
+            @if (userManage)
+            {
+                <button onclick="openForm('', 'NEW GROUP');" type="button" class="btn btn-default" aria-label="Left Align">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    NEW
+                </button>
+                <button onclick="deleteData();" type="button" class="btn btn-default" aria-label="Right Align">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    DELETE
+                </button>
+            }
             <button type="button" class="btn btn-default" aria-label="Right Align" onclick="javascript: location.reload();">
                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                 REFRESH
@@ -45,6 +50,7 @@
 </div>
 <script>
     var $table = $('#dataTable');
+    var userManage =@userManage.ToString().ToLower();
     var raiz = '/';
 
     $(function () {
@@ -75,10 +81,11 @@
                 {
                     title: 'ACTIONS', field: '_', width: '30%', formatter: function (value, row) {
                         var builder = new BtnBuilder();
-                        builder.AddBtn({ icon: 'glyphicon-edit', function: 'openForm', param: [row['Id'], 'EDIT GROUP'], title: "Edit group" });
-                        builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']], title: "Delete group" });
+                        if (userManage) {
+                            builder.AddBtn({ icon: 'glyphicon-edit', function: 'openForm', param: [row['Id'], 'EDIT GROUP'], title: "Edit group" });
+                            builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']], title: "Delete group" });
+                        }
                         builder.AddBtn({ icon: 'glyphicon-save-file', function: 'loadReport', param: [row['Id']], title: "Report" });
-
                         return builder.build();
                     }
                 }
