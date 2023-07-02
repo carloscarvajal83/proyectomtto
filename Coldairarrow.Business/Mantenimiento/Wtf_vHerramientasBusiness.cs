@@ -1,3 +1,4 @@
+using Coldairarrow.Business.Common;
 using Coldairarrow.Entity.Mantenimiento;
 using Coldairarrow.Util;
 using System;
@@ -24,7 +25,7 @@ namespace Coldairarrow.Business.Mantenimiento
             //模糊查询
             if (!condition.IsNullOrEmpty() && !keyword.IsNullOrEmpty())
                 q = q.Where($@"{condition}.Contains(@0)", keyword);
-
+            q = q.Where(x => x.IdUsuario == Operator.UserId);
             return q.GetPagination(pagination).ToList();
         }
 

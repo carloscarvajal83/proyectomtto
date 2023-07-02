@@ -95,5 +95,7 @@ namespace Coldairarrow.Entity.Mantenimiento
         public DateTime? ProximaInspecion1 { get; set; }
 
         public DateTime? ProximaInspecion2 { get; set; }
+
+        public String IdUsuario { get; set; }
     }
 }

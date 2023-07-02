@@ -14,6 +14,7 @@ using OfficeOpenXml.Style;
 using Microsoft.AspNetCore.Hosting;
 using OfficeOpenXml.Drawing.Chart;
 using OfficeOpenXml.Drawing;
+using Coldairarrow.Business.Common;
 
 namespace Coldairarrow.Web
 {
@@ -22,6 +23,7 @@ namespace Coldairarrow.Web
     {
         Wtf_TipoHerramientaBusiness _wtf_TipoHerramientaBusiness = new Wtf_TipoHerramientaBusiness();
         Wtf_vReporteControlesHerramientaBusiness _wtf_vReporteControlesHerramientaBusiness = new Wtf_vReporteControlesHerramientaBusiness();
+        Wtf_UsuarioUbicacionesTipoHerramientaBusiness _wtf_UsuarioUbicacionesTipoHerramientaBusiness = new Wtf_UsuarioUbicacionesTipoHerramientaBusiness();
 
         private readonly IHostingEnvironment _env;
 
@@ -75,6 +77,31 @@ namespace Coldairarrow.Web
             };
             var dataList = _wtf_TipoHerramientaBusiness.GetDataList(null, null, pagination);
 
+            return Content(dataList.ToJson());
+        }
+
+        public ActionResult GetDataListByUser_NoPagin(int IdUbicacion, string IdUsuario)
+        {
+            Pagination pagination = new Pagination
+            {
+                PageIndex = 1,
+                PageRows = int.MaxValue
+            };
+            var dataList = _wtf_TipoHerramientaBusiness.GetDataList(null, null, pagination);
+            if (IdUbicacion > 0)
+            {
+                //var controlIds = Wtf_HerramientasBusiness.GetControlIds(IdTipoHerramienta);
+                foreach (var xdata in dataList)
+                {
+                    int IdTipo = xdata.Id;
+                    int conteo = _wtf_UsuarioUbicacionesTipoHerramientaBusiness.ObtenerTipoHerramientasUbicacionUsuario(IdUbicacion, IdTipo, IdUsuario);
+                    if (conteo > 0)
+                    {
+                        xdata.selected = true;
+                        xdata.EsAdmin = _wtf_UsuarioUbicacionesTipoHerramientaBusiness.ObtenerEsAdminTipoHerramientasUbicacionUsuario(IdUbicacion, IdTipo, IdUsuario);
+                    }
+                }
+            }
             return Content(dataList.ToJson());
         }
 

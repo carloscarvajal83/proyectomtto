@@ -1,5 +1,7 @@
 using Coldairarrow.Business.Base_SysManage;
+using Coldairarrow.Business.Mantenimiento;
 using Coldairarrow.Entity.Base_SysManage;
+using Coldairarrow.Entity.Mantenimiento;
 using Coldairarrow.Util;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +12,7 @@ namespace Coldairarrow.Web
     public class Base_UserController : BaseMvcController
     {
         Base_UserBusiness _base_UserBusiness = new Base_UserBusiness();
+        Wtf_UsuarioUbicacionesTipoHerramientaBusiness _wtf_UsuarioUbicacionesTipoHerramientaBusiness = new Wtf_UsuarioUbicacionesTipoHerramientaBusiness();
 
         #region 视图功能
 
@@ -62,11 +65,12 @@ namespace Coldairarrow.Web
         /// 保存
         /// </summary>
         /// <param name="theData">保存的数据</param>
-        public ActionResult SaveData(Base_User theData, string Pwd, string RoleIdList)
+        public ActionResult SaveData(Base_User theData, string Pwd, string RoleIdList, int IdUbicacion, string ToolTypesList)
         {
             if (!Pwd.IsNullOrEmpty())
                 theData.Password = Pwd.ToMD5String();
             var roleIdList = RoleIdList.ToList<string>();
+            var toolTypeList = ToolTypesList.ToList<Wtf_TipoHerramienta>();
 
             if (theData.Id.IsNullOrEmpty())
             {
@@ -81,6 +85,9 @@ namespace Coldairarrow.Web
             }
 
             _base_UserBusiness.SetUserRole(theData.UserId, roleIdList);
+            if (IdUbicacion > 0) {
+                _wtf_UsuarioUbicacionesTipoHerramientaBusiness.EstblecerUsuarioUbicacionTipoHerramienta(theData.UserId, IdUbicacion, toolTypeList);
+            }
 
             return Success();
         }

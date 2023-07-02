@@ -15,5 +15,10 @@ namespace Coldairarrow.Util
         {
             return Guid.NewGuid().ToSequentialGuid().ToUpper();
         }
+
+        public static string GenerateNewId()
+        {
+            return Guid.NewGuid().ToString().ToUpper();
+        }
     }
 }

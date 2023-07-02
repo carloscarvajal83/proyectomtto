@@ -27,5 +27,10 @@ namespace Coldairarrow.Entity.Mantenimiento
         /// </summary>
         public String Descripcion { get; set; }
 
+        [NotMapped]
+        public bool selected { get; set; } = false;
+
+        [NotMapped]
+        public bool EsAdmin { get; set; } = false;
     }
 }

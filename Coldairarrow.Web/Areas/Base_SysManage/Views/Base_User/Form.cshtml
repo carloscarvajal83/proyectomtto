@@ -60,63 +60,139 @@
                 <div class="help-block with-errors"></div>
             </div>
         </div>
+
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Ubicaciones</label>
+            <div class="col-sm-5">
+                <select id="plantHList" class="selectpicker form-control" name="plantHList" data-style="btn-default btn-sm" required title="Select one"></select>
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
+        <div class="form-group form-group-sm">
+            <label class="col-sm-2 control-label">Familias</label>
+            <div class="col-sm-5">
+                <table id="groupsTable" class="table-bordered"></table>
+            </div>
+        </div>
+
         <div class="form-group">
             <button id="submit" type="submit" class="hidden">Enviar</button>
         </div>
     </form>
 </div>
 <script>
-        var theEntity = @objStr;
-        var roleIds =@roleIds;
+    var theEntity = @objStr;
+    var roleIds =@roleIds;
+    var $groupsTable = $('#groupsTable');
+    var baseId = 0;
 
-        $(function () {
-            initEvent();
+    $(function () {
+        initEvent();
+    });
+
+    //事件绑定
+    function initEvent() {
+        $('#Sex').selectpicker({
+            value: theEntity.Sex
+        });
+        $('#Birthday').datetimepicker({
+            language: 'es',
+            minView: 2//日期选择
+        });
+        $('#roleList').selectpicker({
+            url: '/Base_SysManage/Base_SysRole/GetDataList_NoPagin',
+            value: roleIds,
+            valueField: 'RoleId',
+            textField: 'RoleName',
+            pleaseSelect: false
         });
 
-        //事件绑定
-        function initEvent() {
-            $('#Sex').selectpicker({
-                value: theEntity.Sex
-            });
-            $('#Birthday').datetimepicker({
-                language: 'es',
-                minView: 2//日期选择
-            });
-            $('#roleList').selectpicker({
-                url: '/Base_SysManage/Base_SysRole/GetDataList_NoPagin',
-                value: roleIds,
-                valueField: 'RoleId',
-                textField: 'RoleName',
-                pleaseSelect: false
-            });
-            //表单校验
-            $('#form').validator().on('submit', function (e) {
-                //校验成功
-                if (!e.isDefaultPrevented()) {
-                    e.preventDefault();
+        $('#plantHList').selectpicker({
+            url: '/Mantenimiento/Wtf_Ubicaciones/GetDataList_NoPagin',
+            valueField: 'Id',
+            textField: 'Nombre',
+            pleaseSelect: false
+        });
+        loadTypesData();
+        $('#plantHList').on('changed.bs.select', function (e) {
+            // calls on data changed
+            baseId = this.value;
+            refreshTypesTable();
+        });
 
-                    var values = $('#form').getValues();
-                    $.extend(theEntity, values);
-                    theEntity['RoleIdList'] = JSON.stringify(theEntity['roleList'] || []);
-                    loading();
-                    $.postJSON('/Base_SysManage/Base_User/SaveData', theEntity, function (resJson) {
-                        loading(false);
+        //表单校验
+        $('#form').validator().on('submit', function (e) {
+            //校验成功
+            if (!e.isDefaultPrevented()) {
+                e.preventDefault();
 
-                        if (resJson.Success) {
-                            parent.$('#dataTable').bootstrapTable('refresh');
-                            parent.dialogSuccess();
-                            dialogClose();
-                        }
-                        else {
-                            dialogError(resJson.Msg);
-                        }
-                    });
-                }
-            })
+                var values = $('#form').getValues();
+                $.extend(theEntity, values);
+                theEntity['RoleIdList'] = JSON.stringify(theEntity['roleList'] || []);
+                theEntity['IdUbicacion'] = baseId;
+                theEntity['ToolTypesList'] = JSON.stringify($groupsTable.bootstrapTable('getSelections') || []);
+                loading();
+                $.postJSON('/Base_SysManage/Base_User/SaveData', theEntity, function (resJson) {
+                    loading(false);
+
+                    if (resJson.Success) {
+                        parent.$('#dataTable').bootstrapTable('refresh');
+                        parent.dialogSuccess();
+                        dialogClose();
+                    }
+                    else {
+                        dialogError(resJson.Msg);
+                    }
+                });
+            }
+        })
+    }
+
+    function loadTypesData() {
+        $groupsTable.bootstrapTable({
+            url: '/Mantenimiento/Wtf_TipoHerramienta/GetDataListByUser_NoPagin',
+            idField: 'Id',
+            pagination: false,
+            method: 'post',
+            clickToSelect: false,
+            height: 220,
+            contentType: 'application/x-www-form-urlencoded',
+            columns: [
+                { title: 'ck', field: 'selected', checkbox: true, width: '10%' },
+                { title: 'Control', field: 'Descripcion', width: '80%' },
+                { title: 'Admin', field: 'EsAdmin', width: '10%', formatter: "checkBoxEsAdmin", },
+            ],
+            queryParams: function (params) {
+                var searchParams = { IdUbicacion: baseId, IdUsuario: theEntity["UserId"] };
+                $.extend(params, searchParams);
+
+                return params;
+            },
+        });
+    }
+
+    function checkBoxEsAdmin(value, row, index) {
+        const isChecked = row.EsAdmin ? "checked" : "";
+        return '<input type="checkbox" class="chk" data-ID="' + row.Id + '" ' + isChecked + ' onclick="setEsAdmin(event,' + row.Id + ')"/>';
+    }
+
+    function setEsAdmin(event, id) {
+        //console.log("click es admin row", event.target.checked, id);
+        const index = $groupsTable.bootstrapTable('getSelections').findIndex(obj => {
+            return obj.Id == id
+        })
+        if (index > -1) {
+            $groupsTable.bootstrapTable('getSelections')[index].EsAdmin = event.target.checked;
         }
+    }
+    
+    function refreshTypesTable(){
+        $groupsTable.bootstrapTable('refresh', { silent: true });
+    }
 
-        //提交表单
-        function submitForm() {
-            $('#submit').trigger('click');
-        }
+    //提交表单
+    function submitForm() {
+        $('#submit').trigger('click');
+    }
 </script>
