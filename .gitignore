@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 *.xlsx
 /Coldairarrow.Web/appsettings.json
+/Coldairarrow.Web/appsettings.json
