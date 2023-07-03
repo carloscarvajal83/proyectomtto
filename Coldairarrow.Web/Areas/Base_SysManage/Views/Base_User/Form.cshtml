@@ -165,7 +165,7 @@
     }
 
     function checkBoxEsOper(value, row, index) {
-        const isChecked = row.EsAdmin ? "checked" : "";
+        const isChecked = row.EsOper ? "checked" : "";
         return '<input type="checkbox" class="chk" data-ID="' + row.Id + '" ' + isChecked + ' onclick="setEsOper(event,' + row.Id + ')"/>';
     }
 
