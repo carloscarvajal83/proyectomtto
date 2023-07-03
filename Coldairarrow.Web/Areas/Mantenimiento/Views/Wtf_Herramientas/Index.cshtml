@@ -2,7 +2,7 @@
 @using Coldairarrow.Business.Base_SysManage;
 @{
     Layout = "~/Views/Shared/_Layout_List.cshtml";
-    var userManage = PermissionManage.OperatorHasPermissionValue("sysuser.manage");
+    var userManage = PermissionManage.OperatorHasPermissionValue("operTools.manage");
 }
 <div class="fx-content">
     <div id="toobar">
@@ -12,10 +12,6 @@
                 <button onclick="openForm('', 'NEW TOOL');" type="button" class="btn btn-default" aria-label="Left Align">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     NEW
-                </button>
-                <button onclick="deleteData();" type="button" class="btn btn-default" aria-label="Right Align">
-                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                    DELETE
                 </button>
             }
             <button type="button" class="btn btn-default" aria-label="Right Align" onclick="javascript: location.reload();">
@@ -85,9 +81,11 @@
                 {
                     title: 'ACTIONS', field: '_', width: '20%', formatter: function (value, row) {
                         var builder = new BtnBuilder();
-                        if (userManage) {
+                        if (row["EsAdmin"]) {
                             builder.AddBtn({ icon: 'glyphicon-edit', function: 'openForm', param: [row['Id'], 'EDIT TOOL'], title: "Edit tool" });
                             builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']], title: "Delete tool" });
+                            builder.AddBtn({ icon: 'glyphicon-list-alt', function: 'openForm2', param: [row['Id'], 'INSPECTIONS'], title: "Add inspection" });
+                        } else if(row["EsOper"]){
                             builder.AddBtn({ icon: 'glyphicon-list-alt', function: 'openForm2', param: [row['Id'], 'INSPECTIONS'], title: "Add inspection" });
                         }
                         builder.AddBtn({ icon: 'glyphicon-save-file', function: 'loadReport', param: [row['Id']], title: "Report" });

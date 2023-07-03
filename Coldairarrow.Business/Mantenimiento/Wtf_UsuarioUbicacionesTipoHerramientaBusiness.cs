@@ -74,17 +74,14 @@ namespace Coldairarrow.Business.Mantenimiento
 
         #endregion
 
-        public int ObtenerTipoHerramientasUbicacionUsuario(int IdUbicacion, int IdTipoHerramienta, string IdUsuario)
-        {
-            var q = GetIQueryable();
-            var retorno = q.Where(t => t.IdTipoHerramienta == IdTipoHerramienta && t.IdUbicacion == IdUbicacion && t.IdUsuario == IdUsuario).Select(c => c.IdUbicacion);
-            return retorno.Count();
-        }
 
-        public bool ObtenerEsAdminTipoHerramientasUbicacionUsuario(int IdUbicacion, int IdTipoHerramienta, string IdUsuario)
+        public IQueryable<Wtf_UsuarioUbicacionesTipoHerramienta> ObtenerTipoHerramientasUbicacionUsuario(int IdUbicacion, int IdTipoHerramienta, string IdUsuario)
         {
             var q = GetIQueryable();
-            var retorno = q.Where(t => t.IdTipoHerramienta == IdTipoHerramienta && t.IdUbicacion == IdUbicacion && t.IdUsuario == IdUsuario).Select(c => c.EsAdmin).FirstOrDefault();
+            var retorno = q.Where(t => t.IdTipoHerramienta == IdTipoHerramienta && t.IdUbicacion == IdUbicacion && t.IdUsuario == IdUsuario).Select(c => new Wtf_UsuarioUbicacionesTipoHerramienta {
+                EsAdmin = c.EsAdmin,
+                EsOper = c.EsOper
+            });
             return retorno;
         }
 
@@ -98,6 +95,7 @@ namespace Coldairarrow.Business.Mantenimiento
                 IdUsuario= IdUsuario,
                 IdTipoHerramienta = x.Id,
                 EsAdmin = x.EsAdmin,
+                EsOper = x.EsOper
             }).ToList();
             Service.Insert(insertList);
         }

@@ -37,5 +37,7 @@ namespace Coldairarrow.Entity.Mantenimiento
         /// </summary>
         public Boolean EsAdmin { get; set; }
 
+        public Boolean EsOper { get; set; }
+
     }
 }

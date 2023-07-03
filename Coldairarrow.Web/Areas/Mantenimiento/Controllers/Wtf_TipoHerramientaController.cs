@@ -80,8 +80,7 @@ namespace Coldairarrow.Web
             return Content(dataList.ToJson());
         }
 
-        public ActionResult GetDataListByUser_NoPagin(int IdUbicacion, string IdUsuario)
-        {
+        public List<Wtf_TipoHerramienta> GetDataListByUser_NoPaginList(int IdUbicacion, string IdUsuario) {
             Pagination pagination = new Pagination
             {
                 PageIndex = 1,
@@ -90,19 +89,31 @@ namespace Coldairarrow.Web
             var dataList = _wtf_TipoHerramientaBusiness.GetDataList(null, null, pagination);
             if (IdUbicacion > 0)
             {
-                //var controlIds = Wtf_HerramientasBusiness.GetControlIds(IdTipoHerramienta);
                 foreach (var xdata in dataList)
                 {
                     int IdTipo = xdata.Id;
-                    int conteo = _wtf_UsuarioUbicacionesTipoHerramientaBusiness.ObtenerTipoHerramientasUbicacionUsuario(IdUbicacion, IdTipo, IdUsuario);
-                    if (conteo > 0)
+                    var iMapping = _wtf_UsuarioUbicacionesTipoHerramientaBusiness.ObtenerTipoHerramientasUbicacionUsuario(IdUbicacion, IdTipo, IdUsuario);
+                    if (iMapping.Count() > 0)
                     {
                         xdata.selected = true;
-                        xdata.EsAdmin = _wtf_UsuarioUbicacionesTipoHerramientaBusiness.ObtenerEsAdminTipoHerramientasUbicacionUsuario(IdUbicacion, IdTipo, IdUsuario);
+                        xdata.EsAdmin = iMapping.First().EsAdmin;
+                        xdata.EsOper = iMapping.First().EsOper;
                     }
                 }
             }
+            return dataList;
+        }
+
+        public ActionResult GetDataListByUser_NoPagin(int IdUbicacion, string IdUsuario)
+        {
+            var dataList = GetDataListByUser_NoPaginList(IdUbicacion, IdUsuario);
             return Content(dataList.ToJson());
+        }
+
+        public ActionResult GetDataListByUserLocation_NoPagin(int IdUbicacion, string IdUsuario)
+        {
+            var dataList = GetDataListByUser_NoPaginList(IdUbicacion, IdUsuario);
+            return Content(dataList.Where(x => x.selected == true).ToJson());
         }
 
 

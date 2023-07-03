@@ -38,22 +38,6 @@
             </div>
         </div>
         <div class="form-group form-group-sm">
-            <label class="col-sm-2 control-label">Genero</label>
-            <div class="col-sm-5">
-                <select id="Sex" name="Sex" class="selectpicker form-control" data-style="btn-default btn-sm">
-                    <option value="1">Masculino</option>
-                    <option value="0">Femenino</option>
-                </select>
-                <div class="help-block with-errors"></div>
-            </div>
-        </div>
-        <div class="form-group form-group-sm" id="container" style="position:relative">
-            <label class="col-sm-2 control-label">Fecha Nacimiento</label>
-            <div class="col-sm-5" style="position:relative">
-                <input id="Birthday" name="Birthday" type="text" value="@(obj.Birthday?.ToString("yyyy-MM-dd"))" data-date-format="yyyy-mm-dd" class="form-control">
-            </div>
-        </div>
-        <div class="form-group form-group-sm">
             <label class="col-sm-2 control-label">Rol</label>
             <div class="col-sm-5">
                 <select id="roleList" class="selectpicker form-control" name="roleList" multiple data-style="btn-default btn-sm"></select>
@@ -64,7 +48,7 @@
         <div class="form-group form-group-sm">
             <label class="col-sm-2 control-label">Ubicaciones</label>
             <div class="col-sm-5">
-                <select id="plantHList" class="selectpicker form-control" name="plantHList" data-style="btn-default btn-sm" required title="Select one"></select>
+                <select id="plantHList" class="selectpicker form-control" name="plantHList" data-style="btn-default btn-sm" title="Select one"></select>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
@@ -93,13 +77,13 @@
 
     //事件绑定
     function initEvent() {
-        $('#Sex').selectpicker({
+        /*$('#Sex').selectpicker({
             value: theEntity.Sex
-        });
-        $('#Birthday').datetimepicker({
+        });*/
+        /*$('#Birthday').datetimepicker({
             language: 'es',
             minView: 2//日期选择
-        });
+        });*/
         $('#roleList').selectpicker({
             url: '/Base_SysManage/Base_SysRole/GetDataList_NoPagin',
             value: roleIds,
@@ -129,6 +113,8 @@
 
                 var values = $('#form').getValues();
                 $.extend(theEntity, values);
+                theEntity['Sex'] = "1";
+                theEntity['Birthday'] = "2000-01-01";
                 theEntity['RoleIdList'] = JSON.stringify(theEntity['roleList'] || []);
                 theEntity['IdUbicacion'] = baseId;
                 theEntity['ToolTypesList'] = JSON.stringify($groupsTable.bootstrapTable('getSelections') || []);
@@ -162,6 +148,7 @@
                 { title: 'ck', field: 'selected', checkbox: true, width: '10%' },
                 { title: 'Control', field: 'Descripcion', width: '80%' },
                 { title: 'Admin', field: 'EsAdmin', width: '10%', formatter: "checkBoxEsAdmin", },
+                { title: 'Ops', field: 'EsOper', width: '10%', formatter: "checkBoxEsOper", },
             ],
             queryParams: function (params) {
                 var searchParams = { IdUbicacion: baseId, IdUsuario: theEntity["UserId"] };
@@ -177,6 +164,11 @@
         return '<input type="checkbox" class="chk" data-ID="' + row.Id + '" ' + isChecked + ' onclick="setEsAdmin(event,' + row.Id + ')"/>';
     }
 
+    function checkBoxEsOper(value, row, index) {
+        const isChecked = row.EsAdmin ? "checked" : "";
+        return '<input type="checkbox" class="chk" data-ID="' + row.Id + '" ' + isChecked + ' onclick="setEsOper(event,' + row.Id + ')"/>';
+    }
+
     function setEsAdmin(event, id) {
         //console.log("click es admin row", event.target.checked, id);
         const index = $groupsTable.bootstrapTable('getSelections').findIndex(obj => {
@@ -184,6 +176,16 @@
         })
         if (index > -1) {
             $groupsTable.bootstrapTable('getSelections')[index].EsAdmin = event.target.checked;
+        }
+    }
+
+    function setEsOper(event, id) {
+        //console.log("click es admin row", event.target.checked, id);
+        const index = $groupsTable.bootstrapTable('getSelections').findIndex(obj => {
+            return obj.Id == id
+        })
+        if (index > -1) {
+            $groupsTable.bootstrapTable('getSelections')[index].EsOper = event.target.checked;
         }
     }
     
