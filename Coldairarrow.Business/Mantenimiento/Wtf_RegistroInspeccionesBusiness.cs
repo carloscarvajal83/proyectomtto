@@ -89,32 +89,33 @@ namespace Coldairarrow.Business.Mantenimiento
 
         public void ActualizarInspeccionActiva(int IdHerramienta)
         {
-            var q = from c in GetIQueryable()
+            var queryCurrentInspectionsByTool =
+                    from c in GetIQueryable()
                     where c.IdHerramienta == IdHerramienta
                     orderby c.IdControl ascending
                     select c;
-            List<int> IdCtrl = new List<int>();
+            List<int> controlList = new List<int>();
 
-            foreach (var s in q.ToList())
+            foreach (var inspection in queryCurrentInspectionsByTool.ToList())
             {
-                if (!IdCtrl.Contains(s.IdControl)) IdCtrl.Add(s.IdControl);
+                if (!controlList.Contains(inspection.IdControl)) controlList.Add(inspection.IdControl);
             }
             List<Wtf_RegistroInspecciones> registros = new List<Wtf_RegistroInspecciones>();
-            foreach (var IdControl in IdCtrl)
+            foreach (var IdControl in controlList)
             {
                 Wtf_RegistroInspecciones registroActivo = null;
-                foreach (var x in q.ToList())
+                foreach (var inspectionItem in queryCurrentInspectionsByTool.ToList())
                 {
-                    if (x.IdControl != IdControl) continue;
-                    if (registroActivo.IsNullOrEmpty()) registroActivo = x;
-                    x.Activo = false;
-                    if (x.FechaInspeccion > registroActivo.FechaInspeccion) registroActivo = x;
-                    registros.Add(x);
+                    if (inspectionItem.IdControl != IdControl) continue;
+                    if (registroActivo.IsNullOrEmpty()) registroActivo = inspectionItem;
+                    inspectionItem.Activo = false;
+                    if (inspectionItem.FechaInspeccion > registroActivo.FechaInspeccion) registroActivo = inspectionItem;
+                    registros.Add(inspectionItem);
                 }
                 if (registros.Exists(c => c.Id == registroActivo.Id))
                 {
-                    var s = registros.Find(c => c.Id == registroActivo.Id);
-                    s.Activo = true;
+                    var recordItem = registros.Find(c => c.Id == registroActivo.Id);
+                    recordItem.Activo = true;
                 }
             }
             if (registros.Count() > 0)
@@ -128,7 +129,7 @@ namespace Coldairarrow.Business.Mantenimiento
             var q = from r in GetIQueryable()
                     join h in Service.GetIQueryable<Wtf_Herramientas>() on r.IdHerramienta equals h.Id
                     join c in Service.GetIQueryable<Wtf_Controles>() on r.IdControl equals c.Id
-                    where r.IdHerramienta == IdHerramienta
+                    where r.IdHerramienta == IdHerramienta && r.Activo == true
                     select new Wtf_RegistroInspecciones {
                         Id = r.Id,
                         IdHerramienta = r.IdHerramienta,
@@ -138,9 +139,11 @@ namespace Coldairarrow.Business.Mantenimiento
                         FechaInspeccion = r.FechaInspeccion,
                         CodigoWO = r.CodigoWO,
                         Activo = r.Activo,
-                        Control = c.Nombre
+                        Control = c.Nombre,
+                        Valor = r.Valor,
                     };
-            q = q.OrderBy(r => r.IdControl).ThenByDescending(r => r.FechaInspeccion);
+            //q = q.OrderBy(r => r.IdControl).ThenByDescending(r => r.FechaInspeccion);
+            q = q.OrderByDescending(r => r.FechaInspeccion).ThenBy(r => r.Control);
             return q.ToList();
         }
     }

@@ -14,21 +14,21 @@
 
         <div class="form-group form-group-sm">
             <label class="col-sm-2 control-label">Tool</label>
-            <div class="col-sm-5">
+            <div class="col-sm-6">
                 <input name="Herramienta" value="@Herramienta" type="text" class="form-control" disabled>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group form-group-sm">
             <label class="col-sm-2 control-label">Control</label>
-            <div class="col-sm-5">
+            <div class="col-sm-6">
                 <select id="controlList" class="selectpicker form-control" name="controlList" data-style="btn-default btn-sm" required title="Select one"></select>
                 <div class="help-block with-errors"></div>
             </div>
         </div>
         <div class="form-group form-group-sm" id="container" style="position:relative">
             <label class="col-sm-2 control-label">Inspection Date</label>
-            <div class="col-sm-5" style="position:relative">
+            <div class="col-sm-6" style="position:relative">
                 <input id="FechaInspeccion" name="FechaInspeccion" type="text" value="@(obj.FechaInspeccion?.ToString("yyyy-MM-dd"))" data-date-format="yyyy-mm-dd" class="form-control" required autocomplete="off">
                 <div class="help-block with-errors"></div>
             </div>
@@ -42,9 +42,18 @@
             </div>
         </div>
         -->
+
+        <div class="form-group form-group-sm" id="container" style="position:relative">
+            <label class="col-sm-2 control-label">Value ($USD)</label>
+            <div class="col-sm-6" style="position:relative">
+                <input id="Valor" name="Valor" type="text" value="@obj.Valor" class="form-control" data-type="currency" required autocomplete="off" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" placeholder="$0.00">
+                <div class="help-block with-errors"></div>
+            </div>
+        </div>
+
         <div class="form-group form-group-sm">
             <label class="col-sm-2 control-label">Inspections</label>
-            <div class="col-sm-5">
+            <div class="col-sm-6">
                 <table id="inspecTable" class="table-bordered"></table>
             </div>
         </div>
@@ -76,6 +85,7 @@
             textField: 'Nombre',
             pleaseSelect: false
         });
+        formatCurrency($('#Valor'));
         $inspectable.bootstrapTable({
             url: '/Mantenimiento/Wtf_RegistroInspecciones/GetDataList_NoPagin',
             idField: 'Id',
@@ -85,14 +95,16 @@
             height: 220,
             contentType: 'application/x-www-form-urlencoded',
             columns: [
-                { title: 'Control', field: 'Control', width: '55%' },
-                {title: 'Insp. Date', field: 'FechaInspeccion', width: '20%', formatter: function (value) {
+                { title: 'Control', field: 'Control', width: '40%' },
+                { title: 'Insp. Date', field: 'FechaInspeccion', width: '20%', formatter: function (value) {
                         return toDateString(value, 'yyyy-MM-dd');
                     }
                 },
+                { title: 'Valor', field: 'Valor', width: '15%' },
                 {
-                    title: 'Action', field: '_', width: '15%', formatter: function (value, row) {
+                    title: 'Action', field: '_', width: '18%', formatter: function (value, row) {
                         var builder = new BtnBuilder();
+                        builder.AddBtn({ icon: 'glyphicon-edit', function: 'editData', param: [row, row['Id']], title: "Edit inspection" });
                         builder.AddBtn({ icon: 'glyphicon-trash', function: 'deleteData', param: [row['Id']] });
                         return builder.build();
                     }
@@ -116,6 +128,7 @@
                 $.extend(theEntity, values);
                 theEntity['IdControl'] = $('#controlList').val();
                 theEntity['CodigoWO'] = 0;
+                theEntity['Valor'] = formatNumeric(theEntity["Valor"]);
                 loading();
                 $.postJSON('/Mantenimiento/Wtf_RegistroInspecciones/SaveData', theEntity, function (resJson) {
                     loading(false);
@@ -125,11 +138,14 @@
                         $('#inspecTable').bootstrapTable('refresh');
                         parent.dialogSuccess();
                         //dialogClose();
-                        //$('#FechaInspeccion').val("");
+                        $('#FechaInspeccion').val("");
                         $("#controlList").val('default');
                         $("#controlList").selectpicker("refresh");
+                        $('#Valor').val('');
+                        theEntity['Id'] = "";
                         //$("#CodigoWO").val('');
-
+                        $("#controlList").removeAttr('disabled');
+                        $('#controlList').selectpicker('refresh');
                     }
                     else {
                         dialogError(resJson.Msg);
@@ -155,6 +171,103 @@
                 }
             });
         });
+    }
+
+    function editData(item, info){
+        theEntity['Id'] = item["Id"];
+        $('#controlList').val(item["IdControl"]);
+        $('#FechaInspeccion').val(toDateString(item["FechaInspeccion"], 'yyyy-MM-dd'));
+        $('#Valor').val(item["Valor"]);
+        formatCurrency($('#Valor'));
+        $("#controlList").prop('disabled', true);
+        $('#controlList').selectpicker('refresh');
+    }
+
+
+    $("input[data-type='currency']").on({
+        keyup: function () {
+            formatCurrency($(this));
+        },
+        blur: function () {
+            formatCurrency($(this), "blur");
+        }
+    });
+
+    function formatNumeric(n) {
+        // format number 1000000 to 1,234,567
+        return n.replace("$","").replace(",", "").replace(",", ".");
+    }
+
+    function formatNumber(n) {
+        // format number 1000000 to 1,234,567
+        return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+
+    function formatCurrency(input, blur) {
+        // appends $ to value, validates decimal side
+        // and puts cursor back in right position.
+
+        // get input value
+        var input_val = input.val();
+
+        // don't validate empty input
+        if (input_val === "") { return; }
+
+        // original length
+        var original_len = input_val.length;
+
+        // initial caret position
+        var caret_pos = input.prop("selectionStart");
+
+        // check for decimal
+        if (input_val.indexOf(".") >= 0) {
+
+            // get position of first decimal
+            // this prevents multiple decimals from
+            // being entered
+            var decimal_pos = input_val.indexOf(".");
+
+            // split number by decimal point
+            var left_side = input_val.substring(0, decimal_pos);
+            var right_side = input_val.substring(decimal_pos);
+
+            // add commas to left side of number
+            left_side = formatNumber(left_side);
+
+            // validate right side
+            right_side = formatNumber(right_side);
+
+            // On blur make sure 2 numbers after decimal
+            if (blur === "blur") {
+                right_side += "00";
+            }
+
+            // Limit decimal to only 2 digits
+            right_side = right_side.substring(0, 2);
+
+            // join number by .
+            input_val = "$" + left_side + "." + right_side;
+
+        } else {
+            // no decimal entered
+            // add commas to number
+            // remove all non-digits
+            input_val = formatNumber(input_val);
+            input_val = "$" + input_val;
+
+            // final formatting
+            if (blur === "blur") {
+                input_val += ".00";
+            }
+        }
+
+        // send updated string to input
+        input.val(input_val);
+
+        // put caret back in the right position
+        var updated_len = input_val.length;
+        caret_pos = updated_len - original_len + caret_pos;
+        input[0].setSelectionRange(caret_pos, caret_pos);
     }
 
     //提交表单

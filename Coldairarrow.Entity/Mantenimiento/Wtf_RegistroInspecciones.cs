@@ -42,6 +42,9 @@ namespace Coldairarrow.Entity.Mantenimiento
         /// </summary>
         public Boolean Activo { get; set; }
 
+        public decimal Valor { get; set; }
+
+
         [NotMapped]
         public Int32 IdTipoHerramienta { get; set; }
 

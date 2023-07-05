@@ -17,7 +17,11 @@ BtnBuilder.prototype.AddBtn = function (options) {
     var clickHtml = '';
     if (_options.function) {
         for (var i = 0; i < _options.param.length; i++) {
-            _options.param[i] = "'" + _options.param[i] + "'";
+            if (typeof _options.param[i] == "object") {
+                _options.param[i] = JSON.stringify(_options.param[i]).replaceAll('"', "'");
+            } else {
+                _options.param[i] = "'" + _options.param[i] + "'";
+            }
         }
         clickHtml = 'onclick="' + _options.function + '(' + _options.param.join(',') + ')"';
     }
