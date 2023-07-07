@@ -191,6 +191,7 @@ namespace Coldairarrow.Web
             //Se almacenan los datos consolidados de cada control por estado
             //La clave es el Id del Control y la clave interna es el Id del Estado
             List<IConsolidado> Consolidado = new List<IConsolidado>();
+            List <IControlConsolidado> controlConsolidado = new List<IControlConsolidado>();
 
             var FechaHoy = DateTime.Now;
             string strYear = FechaHoy.ToString("yyyy");
@@ -269,6 +270,7 @@ namespace Coldairarrow.Web
 
                 irow = irow + 2;
                 int wrow = irow;
+                decimal costoTotal = 0.0m;
                 foreach (var itool in listado)
                 {
                     if (PosicionHerramientas.Count(x => x.Key == itool.Serial) == 0)
@@ -315,8 +317,23 @@ namespace Coldairarrow.Web
                             Consolidado.Add(innerDic);
                         }
 
+                        bool _controlConsolidadoExiste = controlConsolidado.Count(x => x.IdControl == itool.IdControl) > 0; ;
+                        if (!_controlConsolidadoExiste)
+                        {
+                            var innerControl = new IControlConsolidado
+                            {
+                                IdControl = itool.IdControl,
+                                Valor = 0,
+                            };
+                            controlConsolidado.Add(innerControl);
+                        }
+
+
 
                         var registroEstadistica = Consolidado.First(x => x.IdControl == itool.IdControl && x.IdEstado == itool.Estado).vControl;
+                        var estadisticaControl = controlConsolidado.First(x => x.IdControl == itool.IdControl);
+                        estadisticaControl.Valor += itool.Valor;
+                        costoTotal += itool.Valor;
 
                         switch (itool.Estado)
                         {
@@ -384,7 +401,44 @@ namespace Coldairarrow.Web
                     worksheet.Cells[2, 1, 2, 7].Merge = true;
                 }
 
-                irow++;
+                wrow = irow;
+
+                // Se imprime el costo agrupaddo por control
+                worksheet.Cells[wrow, 1].Value = "COSTO TOTAL POR CONTROL";
+                worksheet.Cells[wrow, 1].Style.Font.Bold = true;
+                worksheet.Cells[wrow, 1, wrow, 2].Merge = true;
+                worksheet.Cells[wrow, 1, wrow, 2].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[wrow, 1, wrow, 2].Style.Fill.BackgroundColor.SetColor(255, 0, 255, 0);
+                worksheet.Cells[wrow, 1, wrow, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells[wrow, 1, wrow, 2].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+                foreach (var icontrol in listadoControles)
+                {
+                    int wcol = PosicionControles[icontrol.IdControl];
+                    worksheet.Cells[wrow, wcol].Value = controlConsolidado.First(x => x.IdControl == icontrol.IdControl).Valor;
+                    worksheet.Cells[wrow, wcol].Style.Font.Bold = true;
+                    worksheet.Cells[wrow, wcol, wrow, wcol + 1].Merge = true;
+                    worksheet.Cells[wrow, wcol, wrow, wcol + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[wrow, wcol, wrow, wcol + 1].Style.Fill.BackgroundColor.SetColor(255, 0, 255, 0);
+                    worksheet.Cells[wrow, wcol, wrow, wcol + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[wrow, wcol, wrow, wcol + 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                }
+
+                wrow++;
+                // Se imprime el costo total de la familia
+                worksheet.Cells[wrow, 1].Value = "COSTO TOTAL";
+                worksheet.Cells[wrow, 3].Value = costoTotal;
+                worksheet.Cells[wrow, 1, wrow, 2].Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+                worksheet.Cells[wrow, 1, wrow, 2].Merge = true;
+                int wcolmax = PosicionControles.Max(c => c.Value);
+                worksheet.Cells[wrow, 3, wrow, wcolmax + 1].Merge = true;
+                worksheet.Cells[wrow, 1, wrow, wcolmax + 1].Style.Font.Bold = true;
+                worksheet.Cells[wrow, 1, wrow, wcolmax + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[wrow, 1, wrow, wcolmax + 1].Style.Fill.BackgroundColor.SetColor(255, 0, 255, 0);
+                worksheet.Cells[wrow, 3, wrow, wcolmax + 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells[wrow, 1, wrow, wcolmax + 1].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+                irow += 2;
                 wrow = irow;
 
                 worksheet.Cells[wrow + 1, 1].Value = "OK";
@@ -542,5 +596,11 @@ namespace Coldairarrow.Web
         public int IdEstado { get; set; }
         public string strEstado { get; set; }
         public Color iColor { get; set; }
+    }
+
+    public class IControlConsolidado
+    {
+        public int IdControl { get; set; }
+        public decimal Valor { get; set; }
     }
 }

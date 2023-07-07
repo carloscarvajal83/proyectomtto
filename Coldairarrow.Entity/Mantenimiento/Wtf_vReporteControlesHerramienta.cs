@@ -92,5 +92,7 @@ namespace Coldairarrow.Entity.Mantenimiento
         /// </summary>
         public Int32 Estado { get; set; }
 
+        public decimal Valor { get; set; }
+
     }
 }
