@@ -19,6 +19,7 @@
     <Compile Remove="ClassLibrary\RPC\**" />
     <EmbeddedResource Remove="ClassLibrary\RPC\**" />
     <None Remove="ClassLibrary\RPC\**" />
+    <PackageReference Include="Aspose.Cells" Version="26.4.0" />
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="AutoMapper" Version="16.1.1" />
     <PackageReference Include="ImpromptuInterface" Version="7.0.1" />
