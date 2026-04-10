@@ -1,5 +1,7 @@
 ﻿using Coldairarrow.Util;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore; // For RelationalDatabaseFacadeExtensions
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
@@ -582,14 +584,14 @@ namespace Coldairarrow.DataRepository
         {
             if (!_openedTransaction)
             {
-                Db.Database.ExecuteSqlCommand(sql);
+                Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.ExecuteSqlRaw(Db.Database, sql);
                 Dispose();
             }
             else
             {
                 _sqlTransaction += new Action(() =>
                 {
-                    Db.Database.ExecuteSqlCommand(sql);
+                    Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.ExecuteSqlRaw(Db.Database, sql);
                 });
             }
         }
@@ -602,14 +604,14 @@ namespace Coldairarrow.DataRepository
         {
             if (!_openedTransaction)
             {
-                Db.Database.ExecuteSqlCommand(sql, parameters.ToArray());
+                Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.ExecuteSqlRaw(Db.Database, sql, parameters.Cast<object>().ToArray());
                 Dispose();
             }
             else
             {
                 _sqlTransaction += new Action(() =>
                 {
-                    Db.Database.ExecuteSqlCommand(sql, parameters.ToArray());
+                    Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.ExecuteSqlRaw(Db.Database, sql, parameters.Cast<object>().ToArray());
                 });
             }
         }
